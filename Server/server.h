@@ -16,6 +16,8 @@ private:
 
 	ptr_room_provider m_roomprovider;
 
+	ptr_udpserver m_udpserver;
+
 public:
 	server(int tcpport , int udpport);
 	~server();

@@ -43,6 +43,7 @@ class gameuser_machine;
 class staticobject_machine;
 class gameobject;
 class util_makeindex;
+class udpserver;
 
 #define roommaxuser 20
 
@@ -61,6 +62,7 @@ typedef boost::shared_ptr< gameobject > ptr_gameobject;
 typedef boost::shared_ptr< util_makeindex > ptr_makeindex;
 typedef boost::shared_ptr< google::protobuf::Message > ptr_proto_message;
 typedef boost::shared_ptr< boost::asio::strand > ptr_strand;
+typedef boost::shared_ptr< udpserver > ptr_udpserver;
 
 
 typedef boost::weak_ptr < user_session > weakptr_user_session;

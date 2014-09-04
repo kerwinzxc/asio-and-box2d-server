@@ -3,16 +3,20 @@
 #include "user_session.h"
 #include "room_provider.h"
 #include "user_session_manager.h"
+#include "udpserver.h"
 
 int server::m_threadcount = 5;
 
 server::server(int tcpport, int udpport)
-	:m_acceptor(m_io, tcp::endpoint(boost::asio::ip::tcp::v4(), tcpport)),
-	m_tcpsocket(m_io)
+	: m_acceptor(m_io, tcp::endpoint(boost::asio::ip::tcp::v4(), tcpport))
+	, m_tcpsocket(m_io)
 {
+	m_udpserver = boost::make_shared<udpserver>(m_io, udpport);
 	m_roomprovider = boost::make_shared<room_provider>(m_io);
 	//m_roomprovider->init_rooms();
 	do_accept();
+
+
 }
 
 

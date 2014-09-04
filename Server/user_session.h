@@ -21,6 +21,9 @@ private:
 	ptr_room_provider m_room_provider;
 	ptr_room m_room;
 
+	string m_deviceid;
+	boost::uuids::uuid m_uuid;
+
 public:
 	user_session(boost::asio::ip::tcp::socket _socket,ptr_room_provider arg_room_provider);
 	~user_session();
@@ -33,4 +36,5 @@ public:
 	void handle_exit();
 	void setup_timeout();
 	void timeout();
+	void handle_add_tcp_user(boost::uuids::uuid arg_uuid);
 };

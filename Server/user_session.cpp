@@ -13,6 +13,7 @@ user_session::user_session(boost::asio::ip::tcp::socket arg_socket, ptr_room_pro
 	, m_strand(arg_socket.get_io_service())
 	, m_room_provider(arg_room_provider)
 	, m_timer(arg_socket.get_io_service())
+	, m_uuid(boost::uuids::nil_uuid())
 {
 	m_receivedata = boost::make_shared<packet_data>();
 	m_packetdecoder = boost::make_shared<packet_decoder>(m_receivedata);
@@ -54,22 +55,8 @@ void user_session::do_receive()
 					databody::login* _login = (databody::login*)_message.get();
 					if (_login->loginstep() == 1)
 					{
-						_login->PrintDebugString();
-						
-						/*databody::login* _sendlogin = new databody::login();
-
-						_sendlogin->set_deviceid(_login->deviceid());
-						_sendlogin->set_loginstep(2);
-						string a("awefwefwfewfwef");
-						_sendlogin->set_allocated_uuid(&a);
-						ptr_packet_data data = boost::make_shared<packet_data>();
-						ptr_packet_encoder encoder = boost::make_shared<packet_encoder>(data);
-						encoder->addmessage(_sendlogin);
-						encoder->makeheader();
-						*/
-
-
-						
+						m_deviceid = _login->deviceid();
+						user_session_manager::getInst().add_tcp_login_user(shared_from_this(), _login->deviceid(), boost::bind(&user_session::handle_add_tcp_user, shared_from_this(), _1));						
 					}
 				}
 			}
@@ -106,7 +93,7 @@ void user_session::do_receive()
 
 void user_session::do_writequeue(ptr_packet_data _senddata)
 {
-	m_qacketqueue.push(_senddata);	
+	m_qacketqueue.push(_senddata);
 	do_sendpacket();
 }
 
@@ -128,6 +115,7 @@ void user_session::do_sendpacket()
 			{
 				m_senddata = false;
 				do_sendpacket();
+
 			}
 			else
 			{
@@ -139,8 +127,8 @@ void user_session::do_sendpacket()
 }
 
 void user_session::session_end()
-{
-	user_session_manager::getInst().delete_user(shared_from_this());
+{	
+	user_session_manager::getInst().delete_user(shared_from_this(), m_uuid);
 	m_socket.close();
 	m_timer.cancel();
 
@@ -175,4 +163,28 @@ void user_session::setup_timeout()
 void user_session::timeout()
 {
 //	m_socket.close();
+}
+
+
+void user_session::handle_add_tcp_user(boost::uuids::uuid arg_uuid)
+{
+	auto self(shared_from_this());
+	m_strand.dispatch([&,this, self, arg_uuid]()
+	{
+		m_uuid = arg_uuid;
+		databody::login* _sendlogin = new databody::login();
+
+		_sendlogin->set_allocated_deviceid(&m_deviceid);
+		_sendlogin->set_loginstep(2);
+		string u = to_string(m_uuid);
+		_sendlogin->set_allocated_uuid(&u);
+
+		ptr_packet_data data = boost::make_shared<packet_data>();
+		ptr_packet_encoder encoder = boost::make_shared<packet_encoder>(data);
+		encoder->addmessage(_sendlogin);
+		encoder->makeheader();
+
+		do_writequeue(data);
+	});
+	
 }
