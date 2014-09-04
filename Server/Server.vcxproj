@@ -1,0 +1,248 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{55E3790A-AA14-427D-B474-60615107812A}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Server</RootNamespace>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Static</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Static</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Static</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros">
+    <NuGetPackageImportStamp>24a16859</NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <Linkage-protobuf>static</Linkage-protobuf>
+    <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    <Linkage-protobuf>static</Linkage-protobuf>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <Linkage-protobuf>static</Linkage-protobuf>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\Work\Project\Server\packages\boost.1.56.0.0\lib\native\include;$(IncludePath)</IncludePath>
+    <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    <Linkage-protobuf>static</Linkage-protobuf>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;_WINSOCK_DEPRECATED_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="body.pb.h" />
+    <ClInclude Include="def.h" />
+    <ClInclude Include="event.h" />
+    <ClInclude Include="interface.h" />
+    <ClInclude Include="gameuser_machine.h" />
+    <ClInclude Include="gameuser_skilldef.h" />
+    <ClInclude Include="packet_decoder.h" />
+    <ClInclude Include="packet_encoder.h" />
+    <ClInclude Include="packet_data.h" />
+    <ClInclude Include="room.h" />
+    <ClInclude Include="room_provider.h" />
+    <ClInclude Include="server.h" />
+    <ClInclude Include="staticobject_machine.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="udpserver.h" />
+    <ClInclude Include="user_session.h" />
+    <ClInclude Include="user_session_manager.h" />
+    <ClInclude Include="util_makeindex.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="body.pb.cc" />
+    <ClCompile Include="gameuser_machine.cpp" />
+    <ClCompile Include="gameuser_skilldef.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="packet_decoder.cpp" />
+    <ClCompile Include="packet_encoder.cpp" />
+    <ClCompile Include="packet_data.cpp" />
+    <ClCompile Include="room.cpp" />
+    <ClCompile Include="room_provider.cpp" />
+    <ClCompile Include="server.cpp" />
+    <ClCompile Include="staticobject_machine.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="udpserver.cpp" />
+    <ClCompile Include="user_session.cpp" />
+    <ClCompile Include="user_session_manager.cpp" />
+    <ClCompile Include="util_makeindex.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\tbb.redist.4.2.3.1\build\native\tbb.redist.targets" Condition="Exists('..\packages\tbb.redist.4.2.3.1\build\native\tbb.redist.targets')" />
+    <Import Project="..\packages\tbb.4.2.3.1\build\native\tbb.targets" Condition="Exists('..\packages\tbb.4.2.3.1\build\native\tbb.targets')" />
+    <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+    <Import Project="..\packages\boost.1.56.0.0\build\native\boost.targets" Condition="Exists('..\packages\boost.1.56.0.0\build\native\boost.targets')" />
+    <Import Project="..\packages\boost_date_time-vc120.1.56.0.0\build\native\boost_date_time-vc120.targets" Condition="Exists('..\packages\boost_date_time-vc120.1.56.0.0\build\native\boost_date_time-vc120.targets')" />
+    <Import Project="..\packages\boost_regex-vc120.1.56.0.0\build\native\boost_regex-vc120.targets" Condition="Exists('..\packages\boost_regex-vc120.1.56.0.0\build\native\boost_regex-vc120.targets')" />
+    <Import Project="..\packages\boost_system-vc120.1.56.0.0\build\native\boost_system-vc120.targets" Condition="Exists('..\packages\boost_system-vc120.1.56.0.0\build\native\boost_system-vc120.targets')" />
+    <Import Project="..\packages\boost_thread-vc120.1.56.0.0\build\native\boost_thread-vc120.targets" Condition="Exists('..\packages\boost_thread-vc120.1.56.0.0\build\native\boost_thread-vc120.targets')" />
+    <Import Project="..\packages\boost_context-vc120.1.56.0.0\build\native\boost_context-vc120.targets" Condition="Exists('..\packages\boost_context-vc120.1.56.0.0\build\native\boost_context-vc120.targets')" />
+    <Import Project="..\packages\boost_coroutine-vc120.1.56.0.0\build\native\boost_coroutine-vc120.targets" Condition="Exists('..\packages\boost_coroutine-vc120.1.56.0.0\build\native\boost_coroutine-vc120.targets')" />
+    <Import Project="..\packages\boost_chrono-vc120.1.56.0.0\build\native\boost_chrono-vc120.targets" Condition="Exists('..\packages\boost_chrono-vc120.1.56.0.0\build\native\boost_chrono-vc120.targets')" />
+    <Import Project="..\packages\Box2D.2.3.0.7\build\native\Box2D.targets" Condition="Exists('..\packages\Box2D.2.3.0.7\build\native\Box2D.targets')" />
+    <Import Project="..\packages\myprotobuf_vc120.2.5.0.0\build\native\myprotobuf_vc120.targets" Condition="Exists('..\packages\myprotobuf_vc120.2.5.0.0\build\native\myprotobuf_vc120.targets')" />
+  </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>이 프로젝트는 이 컴퓨터에 없는 NuGet 패키지를 참조합니다. 해당 패키지를 다운로드하려면 NuGet 패키지 복원을 사용하십시오. 자세한 내용은 http://go.microsoft.com/fwlink/?LinkID=322105를 참조하십시오. 누락된 파일은 {0}입니다.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\tbb.redist.4.2.3.1\build\native\tbb.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\tbb.redist.4.2.3.1\build\native\tbb.redist.targets'))" />
+    <Error Condition="!Exists('..\packages\tbb.4.2.3.1\build\native\tbb.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\tbb.4.2.3.1\build\native\tbb.targets'))" />
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+    <Error Condition="!Exists('..\packages\boost.1.56.0.0\build\native\boost.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost.1.56.0.0\build\native\boost.targets'))" />
+    <Error Condition="!Exists('..\packages\boost_date_time-vc120.1.56.0.0\build\native\boost_date_time-vc120.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost_date_time-vc120.1.56.0.0\build\native\boost_date_time-vc120.targets'))" />
+    <Error Condition="!Exists('..\packages\boost_regex-vc120.1.56.0.0\build\native\boost_regex-vc120.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost_regex-vc120.1.56.0.0\build\native\boost_regex-vc120.targets'))" />
+    <Error Condition="!Exists('..\packages\boost_system-vc120.1.56.0.0\build\native\boost_system-vc120.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost_system-vc120.1.56.0.0\build\native\boost_system-vc120.targets'))" />
+    <Error Condition="!Exists('..\packages\boost_thread-vc120.1.56.0.0\build\native\boost_thread-vc120.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost_thread-vc120.1.56.0.0\build\native\boost_thread-vc120.targets'))" />
+    <Error Condition="!Exists('..\packages\boost_context-vc120.1.56.0.0\build\native\boost_context-vc120.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost_context-vc120.1.56.0.0\build\native\boost_context-vc120.targets'))" />
+    <Error Condition="!Exists('..\packages\boost_coroutine-vc120.1.56.0.0\build\native\boost_coroutine-vc120.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost_coroutine-vc120.1.56.0.0\build\native\boost_coroutine-vc120.targets'))" />
+    <Error Condition="!Exists('..\packages\boost_chrono-vc120.1.56.0.0\build\native\boost_chrono-vc120.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost_chrono-vc120.1.56.0.0\build\native\boost_chrono-vc120.targets'))" />
+    <Error Condition="!Exists('..\packages\Box2D.2.3.0.7\build\native\Box2D.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Box2D.2.3.0.7\build\native\Box2D.targets'))" />
+    <Error Condition="!Exists('..\packages\myprotobuf_vc120.2.5.0.0\build\native\myprotobuf_vc120.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\myprotobuf_vc120.2.5.0.0\build\native\myprotobuf_vc120.targets'))" />
+  </Target>
+</Project>

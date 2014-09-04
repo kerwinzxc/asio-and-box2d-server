@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="packet_data">
+    <Position X="12" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABCAEAAAAAAQAGAAAAAAAAAADAAAAEABA=</HashCode>
+      <FileName>packet_data.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="room">
+    <Position X="7.75" Y="1.5" Width="1.5" />
+    <NestedTypes>
+      <Typedef Name="room::tgameobjectmap" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>room.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Typedef>
+      <Typedef Name="room::tgameobjectset" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>room.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Typedef>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AABIAAAAEAAAiAQgAAAAAABQAAAABQAAEgACAAAEAAU=</HashCode>
+      <FileName>room.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="room_provider">
+    <Position X="5.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABEAABAAAAAAAQQAAgAEAgAAAAAgMEAAAAAAAAAAAA=</HashCode>
+      <FileName>room_provider.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="server">
+    <Position X="0.75" Y="1.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgBAQQAAAAAAAIAAACIAAAAAAIAAAACAQAAAAAI=</HashCode>
+      <FileName>server.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="user_session">
+    <Position X="3.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CBAAAAAAQgAQAAQgAoAACAACAACAAAAAEABDgAAAABQ=</HashCode>
+      <FileName>user_session.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="gameuser">
+    <Position X="9.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAKAAAAMAAAACAAAAAAAAAAAAAAAIAAAE=</HashCode>
+      <FileName>gameuser_machine.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="user_session_manager">
+    <Position X="9.5" Y="5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAQwAIAACAAAEAAAAAIAAIMAAAAAAAA=</HashCode>
+      <FileName>user_session_manager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="packet_decoder">
+    <Position X="15.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAABEAAAAAAAAAAAQBAAAAAQACBAAAAAABABAEABA=</HashCode>
+      <FileName>packet_decoder.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="packet_encoder">
+    <Position X="13.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAUAAAAAAAQAAAAAAAIBABAAAAAABAAAAAAAABAEgAA=</HashCode>
+      <FileName>packet_encoder.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="udpserver">
+    <Position X="0.75" Y="5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgBAEAAAAIAAAAAAAAAAAAAAAAgAAAACAAA=</HashCode>
+      <FileName>udpserver.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>
