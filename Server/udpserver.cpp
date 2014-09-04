@@ -6,6 +6,7 @@
 udpserver::udpserver(boost::asio::io_service& arg_io, int arg_port)
 	:m_udpsocket(arg_io, udp::endpoint(udp::v4(),arg_port))
 	, m_strand(arg_io)
+	, m_senddata(false)
 {
 	m_data = boost::make_shared<packet_data>();
 	do_receive();
@@ -36,17 +37,15 @@ void udpserver::do_receive()
 					databody::login* p = (databody::login*)_message.get();
 
 					boost::uuids::uuid u = boost::lexical_cast<boost::uuids::uuid>(p->uuid());
-					user_session_manager::getInst().add_udp_login_user(sender_endpoint_, u,boost::bind(&udpserver::handle_add_udp_login_user,shared_from_this(),_1));
+					user_session_manager::getInst().add_udp_login_user(sender_endpoint_, u, boost::bind(&udpserver::handle_add_udp_login_user, shared_from_this(), _1));
 
 				}
 
 				BYTE _type = _packet.getbody(_message);
 			}
 		}
-		else
-		{
-			do_receive();
-		}
+
+		do_receive();
 	}));
 }
 
@@ -68,13 +67,33 @@ void udpserver::handle_add_udp_login_user(udp::endpoint arg_endpoint)
 
 void udpserver::do_writequeue(udp::endpoint arg_dest,ptr_packet_data _data)
 {
-	cout << "do_writequeue" << endl;
-	m_udpsocket.async_send_to(
-		boost::asio::buffer(_data->get_header(), _data->get_headersize() + _data->get_bodysize()), arg_dest,
-		[this](boost::system::error_code ec, std::size_t bytes_sent)
+	m_packetqueue.push(udppacket(_data, arg_dest));
+	do_sendpacket();
+}
+
+void udpserver::do_sendpacket()
+{
+	udppacket data;
+	auto self(shared_from_this());
+	if (m_senddata.exchange(true) == true)
 	{
-		cout << "byte_sent"<<bytes_sent<<endl;
-	});
-
-
+		return;
+	}
+	if (m_packetqueue.try_pop(data))
+	{
+		m_senddata = true;
+		m_udpsocket.async_send_to(boost::asio::buffer(data.m_packet_data->get_header(), data.m_packet_data->get_headersize() + data.m_packet_data->get_bodysize()), data.m_endpoint,
+			m_strand.wrap([this](boost::system::error_code ec, std::size_t bytes_sent)
+		{
+			if (!ec)
+			{
+				m_senddata = false;
+				do_sendpacket();
+			}
+		}));
+	}
+	else
+	{
+		m_senddata = false;
+	}
 }

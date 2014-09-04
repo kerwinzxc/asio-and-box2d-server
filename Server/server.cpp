@@ -61,7 +61,7 @@ void server::do_accept()
 
 void server::init_singgleton()
 {
-	user_session_manager::getInst().init(m_io);
+	user_session_manager::getInst().init(m_io,m_udpserver);
 }
 
 

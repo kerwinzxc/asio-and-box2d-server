@@ -7,6 +7,7 @@
 #include "body.pb.h"
 #include "user_session_manager.h"
 #include "packet_encoder.h"
+#include "udpserver.h"
 
 user_session::user_session(boost::asio::ip::tcp::socket arg_socket, ptr_room_provider arg_room_provider)
 	:m_socket(std::move(arg_socket))
@@ -29,10 +30,8 @@ user_session::~user_session()
 
 void user_session::start()
 {
-	user_session_manager::getInst().add_user(shared_from_this());
-
 	do_receive();
-	m_room_provider->join_room(shared_from_this(), boost::bind(&user_session::handle_join, shared_from_this(),_1));
+	
 }
 
 void user_session::do_receive()
@@ -58,9 +57,12 @@ void user_session::do_receive()
 						m_deviceid = _login->deviceid();
 						user_session_manager::getInst().add_tcp_login_user(shared_from_this(), _login->deviceid(), boost::bind(&user_session::handle_add_tcp_user, shared_from_this(), _1));						
 					}
+					else if (_login->loginstep() == 5)
+					{
+						m_room_provider->join_room(shared_from_this(), boost::bind(&user_session::handle_join, shared_from_this(), _1));
+					}
 				}
 			}
-
 			do_receive();
 		}
 		else
@@ -68,46 +70,33 @@ void user_session::do_receive()
 			session_end();
 		}
 	}));
-	/*boost::asio::async_read(m_socket,boost::asio::buffer(m_receivedata->get_header(),53),
-		m_strand.wrap([this, self](boost::system::error_code ec, std::size_t length)
-	{
-		m_packetdecoder->decode_header();
-		if (!ec && m_packetdecoder->getbodysize())
-		{
-			m_packetdecoder->decode_body();
-			ptr_proto_message _message;
-			while (m_packetdecoder->getbody(_message) != 255)
-			{
-				_message->PrintDebugString();
-			}
-
-			do_receive();
-		}
-		else
-		{
-			session_end();
-		}
-	}));
-	*/
 }
 
-void user_session::do_writequeue(ptr_packet_data _senddata)
+void user_session::do_writequeue(ptr_packet_data arg_packet_data, packet_sendtype arg_type)
 {
-	m_qacketqueue.push(_senddata);
-	do_sendpacket();
+	if (arg_type == packet_sendtype::tcp)
+	{
+		m_qacketqueue.push(arg_packet_data);
+		do_sendpacket();
+	}
+	else
+	{
+		m_udpserver->do_writequeue(m_endpoint, arg_packet_data);
+	}
+
+	
 }
 
 void user_session::do_sendpacket()
 {
 	ptr_packet_data data;
 	auto self(shared_from_this());
-	if (m_senddata == true)
+	if (m_senddata.exchange(true) == true)
 	{
 		return;
 	}
 	if (m_qacketqueue.try_pop(data))
 	{
-		m_senddata = true;
 		boost::asio::async_write(m_socket, boost::asio::buffer(data->get_header(), data->get_headersize() + data->get_bodysize()),
 			m_strand.wrap([this, self](boost::system::error_code ec,std::size_t bytes_transferred)
 		{
@@ -115,7 +104,6 @@ void user_session::do_sendpacket()
 			{
 				m_senddata = false;
 				do_sendpacket();
-
 			}
 			else
 			{
@@ -124,11 +112,15 @@ void user_session::do_sendpacket()
 			
 		}));
 	}
+	else
+	{
+		m_senddata = false;
+	}
 }
 
 void user_session::session_end()
 {	
-	user_session_manager::getInst().delete_user(shared_from_this(), m_uuid);
+	user_session_manager::getInst().delete_user(m_uuid);
 	m_socket.close();
 	m_timer.cancel();
 
@@ -184,7 +176,13 @@ void user_session::handle_add_tcp_user(boost::uuids::uuid arg_uuid)
 		encoder->addmessage(_sendlogin);
 		encoder->makeheader();
 
-		do_writequeue(data);
+		do_writequeue(data, packet_sendtype::tcp);
 	});
 	
+}
+
+void user_session::add_endpoint(ptr_udpserver arg_udpserver, udp::endpoint arg_endpoint)
+{
+	m_udpserver = arg_udpserver;
+	m_endpoint = arg_endpoint;
 }

@@ -24,17 +24,22 @@ private:
 	string m_deviceid;
 	boost::uuids::uuid m_uuid;
 
+	ptr_udpserver m_udpserver;
+	udp::endpoint m_endpoint;
+
+
 public:
 	user_session(boost::asio::ip::tcp::socket _socket,ptr_room_provider arg_room_provider);
 	~user_session();
 	void start();
 	void session_end();
 	void do_receive();
-	void do_writequeue(ptr_packet_data _senddata);
+	void do_writequeue(ptr_packet_data arg_packet_data, packet_sendtype arg_type);
 	void do_sendpacket();
 	void handle_join(ptr_room arg_room);
 	void handle_exit();
 	void setup_timeout();
 	void timeout();
 	void handle_add_tcp_user(boost::uuids::uuid arg_uuid);
+	void add_endpoint(ptr_udpserver arg_udpserver, udp::endpoint arg_endpoint);
 };

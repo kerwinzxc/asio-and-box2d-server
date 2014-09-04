@@ -19,6 +19,7 @@
 #include <atomic>
 
 #include <tbb\concurrent_queue.h>
+#include <tbb\concurrent_hash_map.h>
 #include <boost\asio.hpp>
 #include <boost\thread\thread.hpp>
 #include <boost\asio.hpp>
@@ -40,6 +41,12 @@
 #include <boost\uuid\uuid.hpp>
 #include <boost\uuid\uuid_generators.hpp>
 #include <boost\uuid\uuid_io.hpp>
+#include <boost/multi_index_container.hpp>
+#include <boost/multi_index/member.hpp>
+#include <boost/multi_index/ordered_index.hpp>
+
+using boost::multi_index_container;
+using namespace boost::multi_index;
 
 
 namespace sc = boost::statechart;

@@ -80,18 +80,28 @@ void room::update()
 		auto _ptr = _cur->first.lock();
 		if (_ptr != NULL)
 		{
-			ptr_packet_data _data = boost::make_shared<packet_data>();
-			packet_encoder _encode(_data);
-			evpacketinfolist evti(&_encode);
-			evpacketdatalist evtd(&_encode);
-
-			_cur->second->process_event(evti); // make data
-			_cur->second->process_event(evtd); // make data
-
-			_encode.makeheader();
-			if (_data->get_bodysize() != 0)
 			{
-				_ptr->do_writequeue(_data);
+				ptr_packet_data _data = boost::make_shared<packet_data>();
+				packet_encoder _encode(_data);
+				evpacketinfolist evti(&_encode);
+				_cur->second->process_event(evti); // make data
+				_encode.makeheader();
+				if (_data->get_bodysize() != 0)
+				{
+					_ptr->do_writequeue(_data, packet_sendtype::tcp); // one tick info
+				}
+			}
+
+			{
+				ptr_packet_data _data = boost::make_shared<packet_data>();
+				packet_encoder _encode(_data);
+				evpacketdatalist evtd(&_encode);
+				_cur->second->process_event(evtd); // make data
+				_encode.makeheader();
+				if (_data->get_bodysize() != 0)
+				{
+					_ptr->do_writequeue(_data, packet_sendtype::udp); // all tick position data
+				}
 			}
 			_cur++;
 		}
@@ -123,7 +133,7 @@ void room::dispatch_join(ptr_user_session arg_user, boost::function<void(ptr_roo
 		_encode.makeheader();
 		if (_data->get_bodysize() != 0)
 		{
-			arg_user->do_writequeue(_data);
+			arg_user->do_writequeue(_data, packet_sendtype::tcp);
 		}
 
 		arg_roomprovider_handler(shared_from_this());

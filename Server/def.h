@@ -83,5 +83,7 @@ typedef boost::weak_ptr < gameobject > weakptr_gameobject;
 #define FixtureTag_GameuserBodyRader4 5
 #define FixtureTag_MapObject 6
 
-#include "interface.h"
+enum packet_sendtype{ tcp , udp};
 
+#include "interface.h"
+#include "multi_index.h"
