@@ -5,20 +5,17 @@
 #include "packet_encoder.h"
 
 
-gameuser_machine::gameuser_machine(gameobject* arg_gameobject, ptr_b2world arg_world, ptr_makeindex arg_makeindex)
+gameuser_machine::gameuser_machine( ptr_b2world arg_world, unsigned arg_gameobjectindex)
 	:m_world(arg_world)
-	,m_makeindex(arg_makeindex)
+	,m_gameobjectindex(arg_gameobjectindex)
 	,m_info(NULL)
 	,m_data(NULL)
-	,m_gameobject(arg_gameobject)
 {
 	m_skillcooltime[0] = 1.0f;
 	m_skillcooltime[1] = 1.0f;
 	m_revivedtime = 1.9f;
 	m_maxplayerhp = 100;
 	m_curplayerhp = m_maxplayerhp;
-
-	m_gameobjectindex = m_makeindex->useindex(gameobjectindextag_gameuser);
 
 	b2Vec2 x(-7.0f, 0.75f);
 	b2Vec2 y(-7.0f, 20.0f);
@@ -31,7 +28,7 @@ gameuser_machine::gameuser_machine(gameobject* arg_gameobject, ptr_b2world arg_w
 	b2BodyDef bd;
 	bd.type = b2_dynamicBody;
 	bd.position = y;
-	bd.userData = (void*)arg_gameobject;
+	bd.userData = (void*)m_gameobjectindex;
 	m_body = m_world->CreateBody(&bd);
 	
 	//box
@@ -57,18 +54,6 @@ gameuser_machine::gameuser_machine(gameobject* arg_gameobject, ptr_b2world arg_w
 	fd.userData = (void*)(int)FixtureTag_GameuserBodyNearRader1;
 	m_body->CreateFixture(&fd);
 
-	/*
-	b2EdgeShape edge;
-	edge.Set(b2Vec2(0.0f, 0.0f), b2Vec2(0.0f, 1.0f));
-	b2FixtureDef edgefd;
-	edgefd.shape = &edge;
-	edgefd.isSensor = true;
-	b2Fixture* fix = m_body->CreateFixture(&edgefd);
-	*/
-	//m_world
-	
-//	m_body->SetUserData()
-//
 	makepacket_gameuser_info();
 }
 
@@ -77,8 +62,6 @@ gameuser_machine::~gameuser_machine()
 {
 
 	m_world->DestroyBody(m_body);
-	m_makeindex->reuseindex(m_gameobjectindex);
-
 	delete m_info;
 	deletepacket_gameuser_data();
 
@@ -205,12 +188,28 @@ sc::result gameuser_move::react(const evtick &arg_evt)
 	if (m_evmove.m_type == databody::movedirectiontype::_left)
 	{
 		auto a = context<gameuser_machine>().m_body->GetLinearVelocity(); // 점프했을때 y축 속도는 남김.
-		context<gameuser_machine>().m_body->SetLinearVelocity(b2Vec2(-10.0f, lv.y));
+
+		if (lv.y == 0.0f)
+		{
+			context<gameuser_machine>().m_body->SetLinearVelocity(b2Vec2(-10.0f, lv.y));
+		}
+		else
+		{
+			context<gameuser_machine>().m_body->SetLinearVelocity(b2Vec2(-5.0f, lv.y));
+		}
+		
 	}
 	else if (m_evmove.m_type == databody::movedirectiontype::_right)
 	{
 		auto a = context<gameuser_machine>().m_body->GetLinearVelocity(); // 점프했을때 y축 속도는 남김.
-		context<gameuser_machine>().m_body->SetLinearVelocity(b2Vec2(10.0f, lv.y));
+		if (lv.y == 0.0f)
+		{
+			context<gameuser_machine>().m_body->SetLinearVelocity(b2Vec2(10.0f, lv.y));
+		}
+		else
+		{
+			context<gameuser_machine>().m_body->SetLinearVelocity(b2Vec2(5.0f, lv.y));
+		}
 	}
 	else if (m_evmove.m_type == databody::movedirectiontype::_end
 		|| m_evmove.m_type == databody::movedirectiontype::_none)
@@ -371,13 +370,19 @@ sc::result gameuser_common::react(const evpacketinfolist &arg_evt)
 	auto& _gameuser_machine = context<gameuser_machine>();
 	auto curitr = _gameuser_machine.m_infolist.begin();
 	while (curitr != _gameuser_machine.m_infolist.end())
-	{
-		auto _sharedptr = (*curitr);
+	{		
+		auto _sharedptr = curitr->lock();
 		if (_sharedptr != NULL)
 		{
-			_sharedptr->makepacket_info(arg_evt.m_packet);			
+			_sharedptr->makepacket_info(arg_evt.m_packet);
+			curitr++;
 		}
-		curitr++;
+		else
+		{
+			curitr == _gameuser_machine.m_infolist.erase(curitr);
+		}
+		
+		
 	}
 
 	_gameuser_machine.m_infolist.clear();
@@ -392,11 +397,15 @@ sc::result gameuser_common::react(const evpacketdatalist &arg_evt)
 	auto curitr = context<gameuser_machine>().m_datalist.begin();
 	while (curitr != context<gameuser_machine>().m_datalist.end())
 	{
-		auto _sharedptr = (*curitr);
+		auto _sharedptr = curitr->lock();
 		if (_sharedptr != NULL)
 		{
 			_sharedptr->makepacket_data(arg_evt.m_packet);
 			curitr++;
+		}
+		else
+		{
+			curitr == _gameuser_machine.m_datalist.erase(curitr);
 		}
 	}
 	arg_evt.m_packet->addmessage(_gameuser_machine.get_gameuser_data());

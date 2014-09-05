@@ -187,6 +187,7 @@
     <ClCompile Include="body.pb.cc" />
     <ClCompile Include="gameuser_machine.cpp" />
     <ClCompile Include="gameuser_skilldef.cpp" />
+    <ClCompile Include="interface.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="multi_index.cpp" />
     <ClCompile Include="packet_decoder.cpp" />

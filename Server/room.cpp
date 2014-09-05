@@ -47,7 +47,7 @@ void room::start()
 
 	ptr_gameobject obj = boost::make_shared<staticobject>(m_world, m_makeindex,vec, 4);
 	obj->initiate();
-	m_gameobjectset.insert(obj);
+	m_gameobjectindexmap.insert(tgameobjectindexmap::value_type( obj->get_gameobjectindex(), obj));
 }
 
 void room::update()
@@ -107,7 +107,7 @@ void room::update()
 		}
 		else
 		{
-			m_gameobjectset.erase(_cur->second);
+			m_gameobjectindexmap.erase(_cur->second->get_gameobjectindex());
 			_cur = m_gameobjectmap.erase(_cur);
 		}
 	}
@@ -124,7 +124,7 @@ void room::dispatch_join(ptr_user_session arg_user, boost::function<void(ptr_roo
 		obj->initiate();
 
 		m_gameobjectmap.insert(tgameobjectmap::value_type( arg_user, obj));
-		m_gameobjectset.insert(obj);
+		m_gameobjectindexmap.insert(tgameobjectindexmap::value_type(obj->get_gameobjectindex(),obj));
 
 		ptr_packet_data _data = boost::make_shared<packet_data>();
 		packet_encoder _encode(_data);
@@ -149,7 +149,7 @@ void room::dispatch_exit(ptr_user_session arg_user, boost::function<void(ptr_roo
 		auto obj = m_gameobjectmap.find(arg_user);
 		if (obj != m_gameobjectmap.end())
 		{
-			m_gameobjectset.erase(obj->second);
+			m_gameobjectindexmap.erase(obj->second->get_gameobjectindex());
 		}
 		
 		m_gameobjectmap.erase(arg_user);		
@@ -161,12 +161,25 @@ void room::dispatch_exit(ptr_user_session arg_user, boost::function<void(ptr_roo
 
 void room::BeginContact(b2Contact* contact)
 {
-	gameobject* _gameobjectA = (gameobject*)contact->GetFixtureA()->GetBody()->GetUserData();
-	int _fixtureA = (int) contact->GetFixtureA()->GetUserData();
-	cout << "fixtureA" << _fixtureA << endl;
-	gameobject* _gameobjectB = (gameobject*)contact->GetFixtureB()->GetBody()->GetUserData();
+	unsigned int _indexgameobjectA = (unsigned int)contact->GetFixtureA()->GetBody()->GetUserData();
+	auto cura = m_gameobjectindexmap.find(_indexgameobjectA);
+	ptr_gameobject _gameobjecta;
+	if (cura != m_gameobjectindexmap.end())
+	{
+		_gameobjecta = cura->second;
+	}
+	int _fixtureA = (int)contact->GetFixtureA()->GetUserData();
+	cout << "fixtureA : " << _fixtureA << endl;
+	unsigned int _indexgameobjectB = (unsigned int)contact->GetFixtureB()->GetBody()->GetUserData();
+	auto curb = m_gameobjectindexmap.find(_indexgameobjectB);
+	ptr_gameobject _gameobjectb;
+	if (curb != m_gameobjectindexmap.end())
+	{
+		_gameobjectb = curb->second;
+	}
 	int _fixtureB = (int)contact->GetFixtureB()->GetUserData();
-	cout << "fixtureB" << _fixtureB << endl;
+	cout << "fixtureB : " << _fixtureB << endl;
+	
 
 
 	if (_fixtureA == FixtureTag_GameuserBody)
@@ -176,13 +189,19 @@ void room::BeginContact(b2Contact* contact)
 
 	if (_fixtureA == FixtureTag_GameuserBodyNearRader1)
 	{
-		evaddgameobject evt(_gameobjectB);
-		_gameobjectA->process_event(evt);
+		if (_gameobjecta != NULL && _gameobjectb != NULL)
+		{
+			evaddgameobject evt(_gameobjectb);
+			_gameobjecta->process_event(evt);
+		}
 	}
 	if (_fixtureB == FixtureTag_GameuserBodyNearRader1)
 	{
-		evaddgameobject evt(_gameobjectA);
-		_gameobjectB->process_event(evt);
+		if (_gameobjecta != NULL && _gameobjectb != NULL)
+		{
+			evaddgameobject evt(_gameobjecta);
+			_gameobjectb->process_event(evt);
+		}
 	}
 	//update 
 }
@@ -190,28 +209,47 @@ void room::BeginContact(b2Contact* contact)
 void room::EndContact(b2Contact* contact)
 {
 
-	gameobject* _gameobjectA = (gameobject*)contact->GetFixtureA()->GetBody()->GetUserData();
+	unsigned int _indexgameobjectA = (unsigned int)contact->GetFixtureA()->GetBody()->GetUserData();
+	auto cura = m_gameobjectindexmap.find(_indexgameobjectA);
+	ptr_gameobject _gameobjecta;
+	if (cura != m_gameobjectindexmap.end())
+	{
+		_gameobjecta = cura->second;
+	}
 	int _fixtureA = (int)contact->GetFixtureA()->GetUserData();
-	cout << "fixtureA" << _fixtureA << endl;
-	gameobject* _gameobjectB = (gameobject*)contact->GetFixtureB()->GetBody()->GetUserData();
+	cout << "fixtureA : " << _fixtureA << endl;
+	unsigned int _indexgameobjectB = (unsigned int)contact->GetFixtureB()->GetBody()->GetUserData();
+	auto curb = m_gameobjectindexmap.find(_indexgameobjectB);
+	ptr_gameobject _gameobjectb;
+	if (curb != m_gameobjectindexmap.end())
+	{
+		_gameobjectb = curb->second;
+	}
+	
 	int _fixtureB = (int)contact->GetFixtureB()->GetUserData();
-	cout << "fixtureB" << _fixtureB << endl;
-
+	cout << "fixtureB : " << _fixtureB << endl;
+	
 
 	if (_fixtureA == FixtureTag_GameuserBody)
 	{
 
 	}
-
+	
 	if (_fixtureA == FixtureTag_GameuserBodyNearRader1)
 	{
-		evdeletegameobject evt(_gameobjectB);
-		_gameobjectA->process_event(evt);
+		if (_gameobjecta != NULL && _gameobjectb != NULL)
+		{
+			evdeletegameobject evt(_gameobjectb);
+			_gameobjecta->process_event(evt);
+		}
 	}
 	if (_fixtureB == FixtureTag_GameuserBodyNearRader1)
 	{
-		evdeletegameobject evt(_gameobjectA);
-		_gameobjectB->process_event(evt);
+		if (_gameobjecta != NULL && _gameobjectb != NULL)
+		{
+			evdeletegameobject evt(_gameobjecta);
+			_gameobjectb->process_event(evt);
+		}
 	}
 	//update
 }
@@ -225,7 +263,6 @@ void room::process_move(ptr_user_session arg_user, databody::movedirectiontype a
 			evmove evt(arg_type);
 			obj->second->process_event(evt);
 		}
-		
 	});
 }
 

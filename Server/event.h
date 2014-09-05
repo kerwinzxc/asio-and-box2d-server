@@ -60,8 +60,8 @@ struct evpacketinfolist : sc::event < evpacketinfolist > {
 
 struct evaddgameobject : sc::event < evaddgameobject > 
 {
-	gameobject* m_gameobject;
-	evaddgameobject(gameobject* arg_gameobject)
+	ptr_gameobject m_gameobject;
+	evaddgameobject(ptr_gameobject arg_gameobject)
 		:m_gameobject(arg_gameobject)
 	{
 		
@@ -71,8 +71,8 @@ struct evaddgameobject : sc::event < evaddgameobject >
 
 struct evdeletegameobject : sc::event < evdeletegameobject >
 {
-	gameobject* m_gameobject;
-	evdeletegameobject(gameobject* arg_gameobject)
+	ptr_gameobject m_gameobject;
+	evdeletegameobject(ptr_gameobject arg_gameobject)
 		:m_gameobject(arg_gameobject)
 	{
 

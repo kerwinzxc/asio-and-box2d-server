@@ -14,14 +14,13 @@ class staticobject_machine : public sc::state_machine<staticobject_machine,stati
 {
 	unsigned int m_gameobjectindex;
 	ptr_b2world m_world;
-	ptr_makeindex m_makeindex;
 	b2Body* m_body;
 	databody::staticobject_info* m_info;
 	gameobject* m_gameobject;
 
 
 public:
-	staticobject_machine(gameobject* arg_gameobject,  ptr_b2world arg_world, ptr_makeindex arg_makeindex, b2Vec2* arg_edgelist, int arg_edgecount);
+	staticobject_machine( ptr_b2world arg_world, unsigned int arg_gameobjectindex, b2Vec2* arg_edgelist, int arg_edgecount);
 	~staticobject_machine();
 
 	void makepacket_staticobject_info(b2Vec2* arg_edgelist, int arg_edgecount);
@@ -36,7 +35,6 @@ class staticobject : public gameobject, public boost::enable_shared_from_this<st
 {
 
 	ptr_staticobject_machine m_machine;
-	ptr_makeindex m_makeindex;
 	ptr_b2world m_world;
 	b2Vec2* m_edgelist;
 	int m_edgecount;
@@ -45,16 +43,16 @@ class staticobject : public gameobject, public boost::enable_shared_from_this<st
 public:
 	staticobject(ptr_b2world arg_world, ptr_makeindex arg_makeindex, b2Vec2* arg_edgelist, int arg_edgecount)
 		:m_world(arg_world)
-		, m_makeindex(arg_makeindex)
 		, m_edgelist(arg_edgelist)
 		, m_edgecount(arg_edgecount)
+		, gameobject(arg_makeindex)
 	{
 
 	}
 
 	virtual void initiate()
 	{
-		m_machine = boost::make_shared<staticobject_machine>(this, m_world, m_makeindex, m_edgelist, m_edgecount);
+		m_machine = boost::make_shared<staticobject_machine>(m_world, m_gameobjectindex, m_edgelist, m_edgecount);
 		m_machine->initiate();
 	}
 

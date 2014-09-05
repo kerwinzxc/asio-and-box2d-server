@@ -23,8 +23,6 @@ public:
 	float m_maxplayerhp;
 
 	unsigned int m_gameobjectindex;
-
-	ptr_makeindex m_makeindex;
 	gameobject* m_gameobject;
 
 
@@ -39,11 +37,11 @@ public:
 	databody::gameuser_info* get_gameuser_info() const;
 	databody::gameuser_data* get_gameuser_data() const;
 
-	set<gameobject*> m_infolist;
-	set<gameobject*> m_datalist;
+	set<weakptr_gameobject> m_infolist;
+	set<weakptr_gameobject> m_datalist;
 
 
-	gameuser_machine(gameobject* arg_gameobject, ptr_b2world arg_world, ptr_makeindex arg_makeindex);
+	gameuser_machine( ptr_b2world arg_world, unsigned arg_gameobjectindex);
 	~gameuser_machine();
 
 	void makepacket_gameuser_info();
@@ -51,12 +49,12 @@ public:
 	void makepacket_gameuser_data();
 	void deletepacket_gameuser_data();
 
-	void addgameobject(gameobject* arg_gameobject)
+	void addgameobject(ptr_gameobject arg_gameobject)
 	{
 		m_infolist.insert(arg_gameobject);
 		m_datalist.insert(arg_gameobject);
 	}
-	void deletegameobject(gameobject* arg_gameobject)
+	void deletegameobject(ptr_gameobject arg_gameobject)
 	{
 		m_infolist.erase(arg_gameobject);
 		m_datalist.erase(arg_gameobject);
@@ -70,16 +68,19 @@ public :
 	ptr_gameuser_machine m_machine;
 	ptr_b2world m_world;
 	ptr_makeindex m_makeindex;
+
+
 	gameuser(ptr_b2world arg_world, ptr_makeindex arg_makeindex)
 		: m_world(arg_world)
 		, m_makeindex(arg_makeindex)
+		, gameobject(arg_makeindex)
 	{
 		
 	}
 
 	virtual void initiate()
 	{
-		m_machine = boost::make_shared<gameuser_machine>(this, m_world, m_makeindex);
+		m_machine = boost::make_shared<gameuser_machine>( m_world, m_gameobjectindex);
 		m_machine->initiate();
 	}
 

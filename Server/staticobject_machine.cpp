@@ -5,17 +5,14 @@
 #include "packet_encoder.h"
 
 
-staticobject_machine::staticobject_machine(gameobject* arg_gameobject, ptr_b2world arg_world, ptr_makeindex arg_makeindex, b2Vec2* arg_edgelist, int arg_edgecount)
+staticobject_machine::staticobject_machine( ptr_b2world arg_world, unsigned int arg_gameobjectindex, b2Vec2* arg_edgelist, int arg_edgecount)
 	: m_world(arg_world)
-	, m_makeindex(arg_makeindex)
+	, m_gameobjectindex(arg_gameobjectindex)
 	, m_info(NULL)
 {
-	m_gameobjectindex = m_makeindex->useindex(gameobjectindextag_staticobject);
-
-
 	b2BodyDef bd;
 	bd.position.Set(0.0f, 0.0f);
-	bd.userData = (void*)arg_gameobject;
+	bd.userData = (void*)m_gameobjectindex;
 	m_body = arg_world->CreateBody(&bd);
 
 	b2ChainShape chain;
@@ -36,8 +33,6 @@ staticobject_machine::staticobject_machine(gameobject* arg_gameobject, ptr_b2wor
 staticobject_machine::~staticobject_machine()
 {
 	m_world->DestroyBody(m_body);
-	m_makeindex->reuseindex(m_gameobjectindex);
-
 	delete m_info;
 }
 

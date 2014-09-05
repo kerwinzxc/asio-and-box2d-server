@@ -20,8 +20,8 @@ class room
 	typedef std::map<weakptr_user_session, ptr_gameobject> tgameobjectmap;
 	tgameobjectmap m_gameobjectmap;
 
-	typedef std::set<ptr_gameobject> tgameobjectset;
-	tgameobjectset m_gameobjectset;
+	typedef std::map<int ,ptr_gameobject> tgameobjectindexmap;
+	tgameobjectindexmap m_gameobjectindexmap;
 
 	
 public:
