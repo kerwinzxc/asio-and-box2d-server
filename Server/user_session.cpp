@@ -62,6 +62,15 @@ void user_session::do_receive()
 						m_room_provider->join_room(shared_from_this(), boost::bind(&user_session::handle_join, shared_from_this(), _1));
 					}
 				}
+				if (_type == databody::move::descriptor()->index()
+					|| _type == databody::jump::descriptor()->index()
+					)
+				{
+					if (m_room != NULL)
+					{
+						m_room->process_gamemessage(shared_from_this(), _message, _type);
+					}					
+				}
 			}
 			do_receive();
 		}

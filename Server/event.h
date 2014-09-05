@@ -1,4 +1,5 @@
 #pragma once
+#include "body.pb.h"
 
 class gameuser_live;
 
@@ -23,7 +24,14 @@ struct evtick : sc::event < evtick >
 	float m_tick;
 };
 
-struct evmove : sc::event < evmove > {};
+struct evmove : sc::event < evmove > {
+	databody::movedirectiontype m_type;
+	evmove(databody::movedirectiontype arg_type)
+		:m_type(arg_type)
+	{
+
+	}
+};
 template< skilltype _skilltype >
 struct evskill : sc::event < evskill<_skilltype> > {};
 struct evjump : sc::event < evjump > {};

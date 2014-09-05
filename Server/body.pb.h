@@ -115,6 +115,27 @@ inline bool messagetype_Parse(
   return ::google::protobuf::internal::ParseNamedEnum<messagetype>(
     messagetype_descriptor(), name, value);
 }
+enum movedirectiontype {
+  _none = 0,
+  _left = 1,
+  _right = 2,
+  _end = 3
+};
+bool movedirectiontype_IsValid(int value);
+const movedirectiontype movedirectiontype_MIN = _none;
+const movedirectiontype movedirectiontype_MAX = _end;
+const int movedirectiontype_ARRAYSIZE = movedirectiontype_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* movedirectiontype_descriptor();
+inline const ::std::string& movedirectiontype_Name(movedirectiontype value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    movedirectiontype_descriptor(), value);
+}
+inline bool movedirectiontype_Parse(
+    const ::std::string& name, movedirectiontype* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<movedirectiontype>(
+    movedirectiontype_descriptor(), name, value);
+}
 // ===================================================================
 
 class gameuser_data : public ::google::protobuf::Message {
@@ -213,6 +234,20 @@ class gameuser_data : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 state() const;
   inline void set_state(::google::protobuf::int32 value);
 
+  // required float velx = 7;
+  inline bool has_velx() const;
+  inline void clear_velx();
+  static const int kVelxFieldNumber = 7;
+  inline float velx() const;
+  inline void set_velx(float value);
+
+  // required float vely = 8;
+  inline bool has_vely() const;
+  inline void clear_vely();
+  static const int kVelyFieldNumber = 8;
+  inline float vely() const;
+  inline void set_vely(float value);
+
   // @@protoc_insertion_point(class_scope:databody.gameuser_data)
  private:
   inline void set_has_gameobject_index();
@@ -227,6 +262,10 @@ class gameuser_data : public ::google::protobuf::Message {
   inline void clear_has_cur_hp();
   inline void set_has_state();
   inline void clear_has_state();
+  inline void set_has_velx();
+  inline void clear_has_velx();
+  inline void set_has_vely();
+  inline void clear_has_vely();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -236,9 +275,11 @@ class gameuser_data : public ::google::protobuf::Message {
   float posy_;
   float cur_hp_;
   ::google::protobuf::int32 state_;
+  float velx_;
+  float vely_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(8 + 31) / 32];
 
   friend void  protobuf_AddDesc_body_2eproto();
   friend void protobuf_AssignDesc_body_2eproto();
@@ -317,20 +358,30 @@ class gameuser_info : public ::google::protobuf::Message {
   inline float max_hp() const;
   inline void set_max_hp(float value);
 
+  // required float mass = 3;
+  inline bool has_mass() const;
+  inline void clear_mass();
+  static const int kMassFieldNumber = 3;
+  inline float mass() const;
+  inline void set_mass(float value);
+
   // @@protoc_insertion_point(class_scope:databody.gameuser_info)
  private:
   inline void set_has_gameobject_index();
   inline void clear_has_gameobject_index();
   inline void set_has_max_hp();
   inline void clear_has_max_hp();
+  inline void set_has_mass();
+  inline void clear_has_mass();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::int32 gameobject_index_;
   float max_hp_;
+  float mass_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_body_2eproto();
   friend void protobuf_AssignDesc_body_2eproto();
@@ -819,21 +870,21 @@ class move : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required float angle = 1;
-  inline bool has_angle() const;
-  inline void clear_angle();
-  static const int kAngleFieldNumber = 1;
-  inline float angle() const;
-  inline void set_angle(float value);
+  // required .databody.movedirectiontype direction = 1;
+  inline bool has_direction() const;
+  inline void clear_direction();
+  static const int kDirectionFieldNumber = 1;
+  inline ::databody::movedirectiontype direction() const;
+  inline void set_direction(::databody::movedirectiontype value);
 
   // @@protoc_insertion_point(class_scope:databody.move)
  private:
-  inline void set_has_angle();
-  inline void clear_has_angle();
+  inline void set_has_direction();
+  inline void clear_has_direction();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  float angle_;
+  int direction_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
@@ -1240,6 +1291,50 @@ inline void gameuser_data::set_state(::google::protobuf::int32 value) {
   state_ = value;
 }
 
+// required float velx = 7;
+inline bool gameuser_data::has_velx() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void gameuser_data::set_has_velx() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void gameuser_data::clear_has_velx() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void gameuser_data::clear_velx() {
+  velx_ = 0;
+  clear_has_velx();
+}
+inline float gameuser_data::velx() const {
+  return velx_;
+}
+inline void gameuser_data::set_velx(float value) {
+  set_has_velx();
+  velx_ = value;
+}
+
+// required float vely = 8;
+inline bool gameuser_data::has_vely() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void gameuser_data::set_has_vely() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void gameuser_data::clear_has_vely() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void gameuser_data::clear_vely() {
+  vely_ = 0;
+  clear_has_vely();
+}
+inline float gameuser_data::vely() const {
+  return vely_;
+}
+inline void gameuser_data::set_vely(float value) {
+  set_has_vely();
+  vely_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // gameuser_info
@@ -1286,6 +1381,28 @@ inline float gameuser_info::max_hp() const {
 inline void gameuser_info::set_max_hp(float value) {
   set_has_max_hp();
   max_hp_ = value;
+}
+
+// required float mass = 3;
+inline bool gameuser_info::has_mass() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void gameuser_info::set_has_mass() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void gameuser_info::clear_has_mass() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void gameuser_info::clear_mass() {
+  mass_ = 0;
+  clear_has_mass();
+}
+inline float gameuser_info::mass() const {
+  return mass_;
+}
+inline void gameuser_info::set_mass(float value) {
+  set_has_mass();
+  mass_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -1748,26 +1865,27 @@ inline void exit::set_allocated_deviceid(::std::string* deviceid) {
 
 // move
 
-// required float angle = 1;
-inline bool move::has_angle() const {
+// required .databody.movedirectiontype direction = 1;
+inline bool move::has_direction() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void move::set_has_angle() {
+inline void move::set_has_direction() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void move::clear_has_angle() {
+inline void move::clear_has_direction() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void move::clear_angle() {
-  angle_ = 0;
-  clear_has_angle();
+inline void move::clear_direction() {
+  direction_ = 0;
+  clear_has_direction();
 }
-inline float move::angle() const {
-  return angle_;
+inline ::databody::movedirectiontype move::direction() const {
+  return static_cast< ::databody::movedirectiontype >(direction_);
 }
-inline void move::set_angle(float value) {
-  set_has_angle();
-  angle_ = value;
+inline void move::set_direction(::databody::movedirectiontype value) {
+  assert(::databody::movedirectiontype_IsValid(value));
+  set_has_direction();
+  direction_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -1891,6 +2009,10 @@ inline const EnumDescriptor* GetEnumDescriptor< ::databody::commandtype>() {
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::databody::messagetype>() {
   return ::databody::messagetype_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::databody::movedirectiontype>() {
+  return ::databody::movedirectiontype_descriptor();
 }
 
 }  // namespace google

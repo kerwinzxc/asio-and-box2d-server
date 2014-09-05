@@ -184,15 +184,6 @@ void room::BeginContact(b2Contact* contact)
 		evaddgameobject evt(_gameobjectA);
 		_gameobjectB->process_event(evt);
 	}
-
-	
-
-
-	
-
-
-	
-
 	//update 
 }
 
@@ -223,4 +214,43 @@ void room::EndContact(b2Contact* contact)
 		_gameobjectB->process_event(evt);
 	}
 	//update
+}
+void room::process_move(ptr_user_session arg_user, databody::movedirectiontype arg_type)
+{
+	m_strand.dispatch([&, arg_user, arg_type](){
+
+		auto obj = m_gameobjectmap.find(arg_user);
+		if (obj != m_gameobjectmap.end())
+		{
+			evmove evt(arg_type);
+			obj->second->process_event(evt);
+		}
+		
+	});
+}
+
+void room::process_gamemessage(ptr_user_session arg_user, ptr_proto_message arg_message, BYTE arg_type)
+{
+
+	m_strand.dispatch([&, arg_user, arg_message, arg_type](){
+		if (arg_type == databody::move::descriptor()->index())
+		{
+			databody::move* _move = (databody::move*)arg_message.get();
+			auto obj = m_gameobjectmap.find(arg_user);
+			if (obj != m_gameobjectmap.end())
+			{
+				evmove evt(_move->direction());
+				obj->second->process_event(evt);
+			}
+		}
+		else if (arg_type == databody::jump::descriptor()->index())
+		{
+			auto obj = m_gameobjectmap.find(arg_user);
+			if (obj != m_gameobjectmap.end())
+			{
+				evjump evt;
+				obj->second->process_event(evt);
+			}
+		}
+	});
 }

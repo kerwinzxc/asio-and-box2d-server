@@ -54,6 +54,7 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::EnumDescriptor* shapetype_descriptor_ = NULL;
 const ::google::protobuf::EnumDescriptor* commandtype_descriptor_ = NULL;
 const ::google::protobuf::EnumDescriptor* messagetype_descriptor_ = NULL;
+const ::google::protobuf::EnumDescriptor* movedirectiontype_descriptor_ = NULL;
 
 }  // namespace
 
@@ -65,13 +66,15 @@ void protobuf_AssignDesc_body_2eproto() {
       "body.proto");
   GOOGLE_CHECK(file != NULL);
   gameuser_data_descriptor_ = file->message_type(0);
-  static const int gameuser_data_offsets_[6] = {
+  static const int gameuser_data_offsets_[8] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(gameuser_data, gameobject_index_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(gameuser_data, angle_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(gameuser_data, posx_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(gameuser_data, posy_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(gameuser_data, cur_hp_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(gameuser_data, state_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(gameuser_data, velx_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(gameuser_data, vely_),
   };
   gameuser_data_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -85,9 +88,10 @@ void protobuf_AssignDesc_body_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(gameuser_data));
   gameuser_info_descriptor_ = file->message_type(1);
-  static const int gameuser_info_offsets_[2] = {
+  static const int gameuser_info_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(gameuser_info, gameobject_index_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(gameuser_info, max_hp_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(gameuser_info, mass_),
   };
   gameuser_info_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -169,7 +173,7 @@ void protobuf_AssignDesc_body_2eproto() {
       sizeof(exit));
   move_descriptor_ = file->message_type(6);
   static const int move_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(move, angle_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(move, direction_),
   };
   move_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -231,6 +235,7 @@ void protobuf_AssignDesc_body_2eproto() {
   shapetype_descriptor_ = file->enum_type(0);
   commandtype_descriptor_ = file->enum_type(1);
   messagetype_descriptor_ = file->enum_type(2);
+  movedirectiontype_descriptor_ = file->enum_type(3);
 }
 
 namespace {
@@ -297,29 +302,32 @@ void protobuf_AddDesc_body_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\nbody.proto\022\010databody\"s\n\rgameuser_data\022"
-    "\030\n\020gameobject_index\030\001 \002(\005\022\r\n\005angle\030\002 \002(\002"
-    "\022\014\n\004posx\030\003 \002(\002\022\014\n\004posy\030\004 \002(\002\022\016\n\006cur_hp\030\005"
-    " \002(\002\022\r\n\005state\030\006 \002(\005\"9\n\rgameuser_info\022\030\n\020"
-    "gameobject_index\030\001 \002(\005\022\016\n\006max_hp\030\002 \002(\002\"n"
-    "\n\021staticobject_info\022\030\n\020gameobject_index\030"
-    "\001 \002(\005\022\t\n\001x\030\002 \003(\002\022\t\n\001y\030\003 \003(\002\022\r\n\005angle\030\004 \002"
-    "(\002\022\014\n\004posx\030\005 \002(\002\022\014\n\004posy\030\006 \002(\002\":\n\005login\022"
-    "\021\n\tloginstep\030\001 \002(\005\022\020\n\010deviceid\030\002 \001(\t\022\014\n\004"
-    "uuid\030\003 \001(\t\"\030\n\004join\022\020\n\010deviceid\030\001 \002(\t\"\030\n\004"
-    "exit\022\020\n\010deviceid\030\001 \002(\t\"\025\n\004move\022\r\n\005angle\030"
-    "\001 \002(\002\"\024\n\004jump\022\014\n\004flag\030\001 \002(\010\"\026\n\006skill1\022\014\n"
-    "\004flag\030\001 \002(\010\"G\n\rcommandresult\022&\n\007command\030"
-    "\001 \002(\0162\025.databody.commandtype\022\016\n\006result\030\002"
-    " \002(\010*.\n\tshapetype\022\n\n\006ground\020\000\022\007\n\003box\020\001\022\014"
-    "\n\010gameuser\020\002*b\n\013commandtype\022\r\n\tlogintype"
-    "\020\000\022\014\n\010jointype\020\001\022\014\n\010exittype\020\002\022\014\n\010movety"
-    "pe\020\003\022\014\n\010jumptype\020\004\022\014\n\010firetype\020\005*\246\001\n\013mes"
-    "sagetype\022\022\n\016_gameuser_data\020\000\022\022\n\016_gameuse"
-    "r_info\020\001\022\026\n\022_staticobject_info\020\002\022\n\n\006_log"
-    "in\020\003\022\t\n\005_join\020\004\022\t\n\005_exit\020\005\022\t\n\005_move\020\006\022\t\n"
-    "\005_jump\020\007\022\013\n\007_skill1\020\010\022\022\n\016_commandresult\020"
-    "\t", 881);
+    "\n\nbody.proto\022\010databody\"\217\001\n\rgameuser_data"
+    "\022\030\n\020gameobject_index\030\001 \002(\005\022\r\n\005angle\030\002 \002("
+    "\002\022\014\n\004posx\030\003 \002(\002\022\014\n\004posy\030\004 \002(\002\022\016\n\006cur_hp\030"
+    "\005 \002(\002\022\r\n\005state\030\006 \002(\005\022\014\n\004velx\030\007 \002(\002\022\014\n\004ve"
+    "ly\030\010 \002(\002\"G\n\rgameuser_info\022\030\n\020gameobject_"
+    "index\030\001 \002(\005\022\016\n\006max_hp\030\002 \002(\002\022\014\n\004mass\030\003 \002("
+    "\002\"n\n\021staticobject_info\022\030\n\020gameobject_ind"
+    "ex\030\001 \002(\005\022\t\n\001x\030\002 \003(\002\022\t\n\001y\030\003 \003(\002\022\r\n\005angle\030"
+    "\004 \002(\002\022\014\n\004posx\030\005 \002(\002\022\014\n\004posy\030\006 \002(\002\":\n\005log"
+    "in\022\021\n\tloginstep\030\001 \002(\005\022\020\n\010deviceid\030\002 \001(\t\022"
+    "\014\n\004uuid\030\003 \001(\t\"\030\n\004join\022\020\n\010deviceid\030\001 \002(\t\""
+    "\030\n\004exit\022\020\n\010deviceid\030\001 \002(\t\"6\n\004move\022.\n\tdir"
+    "ection\030\001 \002(\0162\033.databody.movedirectiontyp"
+    "e\"\024\n\004jump\022\014\n\004flag\030\001 \002(\010\"\026\n\006skill1\022\014\n\004fla"
+    "g\030\001 \002(\010\"G\n\rcommandresult\022&\n\007command\030\001 \002("
+    "\0162\025.databody.commandtype\022\016\n\006result\030\002 \002(\010"
+    "*.\n\tshapetype\022\n\n\006ground\020\000\022\007\n\003box\020\001\022\014\n\010ga"
+    "meuser\020\002*b\n\013commandtype\022\r\n\tlogintype\020\000\022\014"
+    "\n\010jointype\020\001\022\014\n\010exittype\020\002\022\014\n\010movetype\020\003"
+    "\022\014\n\010jumptype\020\004\022\014\n\010firetype\020\005*\246\001\n\013message"
+    "type\022\022\n\016_gameuser_data\020\000\022\022\n\016_gameuser_in"
+    "fo\020\001\022\026\n\022_staticobject_info\020\002\022\n\n\006_login\020\003"
+    "\022\t\n\005_join\020\004\022\t\n\005_exit\020\005\022\t\n\005_move\020\006\022\t\n\005_ju"
+    "mp\020\007\022\013\n\007_skill1\020\010\022\022\n\016_commandresult\020\t*\?\n"
+    "\021movedirectiontype\022\t\n\005_none\020\000\022\t\n\005_left\020\001"
+    "\022\n\n\006_right\020\002\022\010\n\004_end\020\003", 1022);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "body.proto", &protobuf_RegisterTypes);
   gameuser_data::default_instance_ = new gameuser_data();
@@ -406,6 +414,22 @@ bool messagetype_IsValid(int value) {
   }
 }
 
+const ::google::protobuf::EnumDescriptor* movedirectiontype_descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return movedirectiontype_descriptor_;
+}
+bool movedirectiontype_IsValid(int value) {
+  switch(value) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+      return true;
+    default:
+      return false;
+  }
+}
+
 
 // ===================================================================
 
@@ -416,6 +440,8 @@ const int gameuser_data::kPosxFieldNumber;
 const int gameuser_data::kPosyFieldNumber;
 const int gameuser_data::kCurHpFieldNumber;
 const int gameuser_data::kStateFieldNumber;
+const int gameuser_data::kVelxFieldNumber;
+const int gameuser_data::kVelyFieldNumber;
 #endif  // !_MSC_VER
 
 gameuser_data::gameuser_data()
@@ -440,6 +466,8 @@ void gameuser_data::SharedCtor() {
   posy_ = 0;
   cur_hp_ = 0;
   state_ = 0;
+  velx_ = 0;
+  vely_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -481,6 +509,8 @@ void gameuser_data::Clear() {
     posy_ = 0;
     cur_hp_ = 0;
     state_ = 0;
+    velx_ = 0;
+    vely_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -583,6 +613,38 @@ bool gameuser_data::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(61)) goto parse_velx;
+        break;
+      }
+
+      // required float velx = 7;
+      case 7: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_velx:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &velx_)));
+          set_has_velx();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(69)) goto parse_vely;
+        break;
+      }
+
+      // required float vely = 8;
+      case 8: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_vely:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &vely_)));
+          set_has_vely();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -635,6 +697,16 @@ void gameuser_data::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(6, this->state(), output);
   }
 
+  // required float velx = 7;
+  if (has_velx()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(7, this->velx(), output);
+  }
+
+  // required float vely = 8;
+  if (has_vely()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(8, this->vely(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -671,6 +743,16 @@ void gameuser_data::SerializeWithCachedSizes(
   // required int32 state = 6;
   if (has_state()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(6, this->state(), target);
+  }
+
+  // required float velx = 7;
+  if (has_velx()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(7, this->velx(), target);
+  }
+
+  // required float vely = 8;
+  if (has_vely()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(8, this->vely(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -718,6 +800,16 @@ int gameuser_data::ByteSize() const {
           this->state());
     }
 
+    // required float velx = 7;
+    if (has_velx()) {
+      total_size += 1 + 4;
+    }
+
+    // required float vely = 8;
+    if (has_vely()) {
+      total_size += 1 + 4;
+    }
+
   }
   if (!unknown_fields().empty()) {
     total_size +=
@@ -763,6 +855,12 @@ void gameuser_data::MergeFrom(const gameuser_data& from) {
     if (from.has_state()) {
       set_state(from.state());
     }
+    if (from.has_velx()) {
+      set_velx(from.velx());
+    }
+    if (from.has_vely()) {
+      set_vely(from.vely());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -780,7 +878,7 @@ void gameuser_data::CopyFrom(const gameuser_data& from) {
 }
 
 bool gameuser_data::IsInitialized() const {
-  if ((_has_bits_[0] & 0x0000003f) != 0x0000003f) return false;
+  if ((_has_bits_[0] & 0x000000ff) != 0x000000ff) return false;
 
   return true;
 }
@@ -793,6 +891,8 @@ void gameuser_data::Swap(gameuser_data* other) {
     std::swap(posy_, other->posy_);
     std::swap(cur_hp_, other->cur_hp_);
     std::swap(state_, other->state_);
+    std::swap(velx_, other->velx_);
+    std::swap(vely_, other->vely_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -813,6 +913,7 @@ void gameuser_data::Swap(gameuser_data* other) {
 #ifndef _MSC_VER
 const int gameuser_info::kGameobjectIndexFieldNumber;
 const int gameuser_info::kMaxHpFieldNumber;
+const int gameuser_info::kMassFieldNumber;
 #endif  // !_MSC_VER
 
 gameuser_info::gameuser_info()
@@ -833,6 +934,7 @@ void gameuser_info::SharedCtor() {
   _cached_size_ = 0;
   gameobject_index_ = 0;
   max_hp_ = 0;
+  mass_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -870,6 +972,7 @@ void gameuser_info::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     gameobject_index_ = 0;
     max_hp_ = 0;
+    mass_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -908,6 +1011,22 @@ bool gameuser_info::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(29)) goto parse_mass;
+        break;
+      }
+
+      // required float mass = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_mass:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &mass_)));
+          set_has_mass();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -940,6 +1059,11 @@ void gameuser_info::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteFloat(2, this->max_hp(), output);
   }
 
+  // required float mass = 3;
+  if (has_mass()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(3, this->mass(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -956,6 +1080,11 @@ void gameuser_info::SerializeWithCachedSizes(
   // required float max_hp = 2;
   if (has_max_hp()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(2, this->max_hp(), target);
+  }
+
+  // required float mass = 3;
+  if (has_mass()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(3, this->mass(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -978,6 +1107,11 @@ int gameuser_info::ByteSize() const {
 
     // required float max_hp = 2;
     if (has_max_hp()) {
+      total_size += 1 + 4;
+    }
+
+    // required float mass = 3;
+    if (has_mass()) {
       total_size += 1 + 4;
     }
 
@@ -1014,6 +1148,9 @@ void gameuser_info::MergeFrom(const gameuser_info& from) {
     if (from.has_max_hp()) {
       set_max_hp(from.max_hp());
     }
+    if (from.has_mass()) {
+      set_mass(from.mass());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -1031,7 +1168,7 @@ void gameuser_info::CopyFrom(const gameuser_info& from) {
 }
 
 bool gameuser_info::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
+  if ((_has_bits_[0] & 0x00000007) != 0x00000007) return false;
 
   return true;
 }
@@ -1040,6 +1177,7 @@ void gameuser_info::Swap(gameuser_info* other) {
   if (other != this) {
     std::swap(gameobject_index_, other->gameobject_index_);
     std::swap(max_hp_, other->max_hp_);
+    std::swap(mass_, other->mass_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -2246,7 +2384,7 @@ void exit::Swap(exit* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int move::kAngleFieldNumber;
+const int move::kDirectionFieldNumber;
 #endif  // !_MSC_VER
 
 move::move()
@@ -2265,7 +2403,7 @@ move::move(const move& from)
 
 void move::SharedCtor() {
   _cached_size_ = 0;
-  angle_ = 0;
+  direction_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2301,7 +2439,7 @@ move* move::New() const {
 
 void move::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    angle_ = 0;
+    direction_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -2313,14 +2451,19 @@ bool move::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required float angle = 1;
+      // required .databody.movedirectiontype direction = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          int value;
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
-                 input, &angle_)));
-          set_has_angle();
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::databody::movedirectiontype_IsValid(value)) {
+            set_direction(static_cast< ::databody::movedirectiontype >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(1, value);
+          }
         } else {
           goto handle_uninterpreted;
         }
@@ -2346,9 +2489,10 @@ bool move::MergePartialFromCodedStream(
 
 void move::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required float angle = 1;
-  if (has_angle()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(1, this->angle(), output);
+  // required .databody.movedirectiontype direction = 1;
+  if (has_direction()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      1, this->direction(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -2359,9 +2503,10 @@ void move::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* move::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required float angle = 1;
-  if (has_angle()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(1, this->angle(), target);
+  // required .databody.movedirectiontype direction = 1;
+  if (has_direction()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      1, this->direction(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -2375,9 +2520,10 @@ int move::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required float angle = 1;
-    if (has_angle()) {
-      total_size += 1 + 4;
+    // required .databody.movedirectiontype direction = 1;
+    if (has_direction()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->direction());
     }
 
   }
@@ -2407,8 +2553,8 @@ void move::MergeFrom(const ::google::protobuf::Message& from) {
 void move::MergeFrom(const move& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_angle()) {
-      set_angle(from.angle());
+    if (from.has_direction()) {
+      set_direction(from.direction());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -2434,7 +2580,7 @@ bool move::IsInitialized() const {
 
 void move::Swap(move* other) {
   if (other != this) {
-    std::swap(angle_, other->angle_);
+    std::swap(direction_, other->direction_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

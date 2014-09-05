@@ -43,6 +43,7 @@ gameuser_machine::gameuser_machine(gameobject* arg_gameobject, ptr_b2world arg_w
 	fd1.userData = (void*)(int)FixtureTag_GameuserBody;
 	fd1.density = 1.0f;
 	m_body->CreateFixture(&fd1);
+	
 //
 
 // circle sensor 일정 원안에 들어갈경우 개체의 정보를 보낸다.
@@ -91,6 +92,7 @@ void gameuser_machine::makepacket_gameuser_info()
 
 		m_info->set_gameobject_index(m_gameobjectindex);
 		m_info->set_max_hp(m_maxplayerhp);
+		m_info->set_mass(m_body->GetMass());
 	}
 
 }
@@ -115,6 +117,11 @@ void gameuser_machine::makepacket_gameuser_data()
 		const b2Vec2& vec = m_body->GetPosition();
 		m_data->set_posx(vec.x);
 		m_data->set_posy(vec.y);
+		auto& lv = m_body->GetLinearVelocity(); // 선속도
+		m_data->set_velx(lv.x);
+		m_data->set_vely(lv.y);
+		
+		m_body->GetAngularVelocity(); // 각속도
 		m_data->set_state(1);
 	}
 }
@@ -160,6 +167,12 @@ sc::result gameuser_idle::react(const evmove &arg_evt)
 	return transit<gameuser_move>();
 }
 
+sc::result gameuser_idle::react(const evjump &arg_evt)
+{
+	post_event(arg_evt);
+	return transit<gameuser_move>();
+}
+
 sc::result gameuser_idle::react(const evskill<skilltype::skill1> & arg_evt)
 {
 	post_event(arg_evt);
@@ -172,7 +185,11 @@ sc::result gameuser_idle::react(const evskill<skilltype::skill2> & arg_evt)
 	return transit<gameuser_skill<skilltype::skill2>>();
 }
 
+
+
 gameuser_move::gameuser_move()
+	:m_evmove(databody::movedirectiontype::_none)
+	, m_jumped(false)
 {
 
 }
@@ -184,6 +201,29 @@ gameuser_move::~gameuser_move()
 
 sc::result gameuser_move::react(const evtick &arg_evt)
 {
+	auto lv = context<gameuser_machine>().m_body->GetLinearVelocity(); // 점프했을때 y축 속도는 남김.
+	if (m_evmove.m_type == databody::movedirectiontype::_left)
+	{
+		auto a = context<gameuser_machine>().m_body->GetLinearVelocity(); // 점프했을때 y축 속도는 남김.
+		context<gameuser_machine>().m_body->SetLinearVelocity(b2Vec2(-10.0f, lv.y));
+	}
+	else if (m_evmove.m_type == databody::movedirectiontype::_right)
+	{
+		auto a = context<gameuser_machine>().m_body->GetLinearVelocity(); // 점프했을때 y축 속도는 남김.
+		context<gameuser_machine>().m_body->SetLinearVelocity(b2Vec2(10.0f, lv.y));
+	}
+	else if (m_evmove.m_type == databody::movedirectiontype::_end
+		|| m_evmove.m_type == databody::movedirectiontype::_none)
+	{
+		
+		context<gameuser_machine>().m_body->SetLinearVelocity(b2Vec2(0.0f, lv.y));		
+	}
+	lv = context<gameuser_machine>().m_body->GetLinearVelocity(); // 점프했을때 y축 속도는 남김.
+	if (lv.x == 0.0f && lv.y == 0.0f)
+	{
+		return transit<gameuser_idle>();
+	}
+	
 	return forward_event();
 }
 
@@ -193,8 +233,19 @@ sc::result gameuser_move::react(const evmove &arg_evt)
 	return discard_event();
 }
 
-sc::result gameuser_move::react(const evskill<skilltype::skill1> & arg_evt)
+sc::result gameuser_move::react(const evjump &arg_evt)
 {	
+	if (m_jumped == false)
+	{
+		m_jumped = true;
+		auto a = context<gameuser_machine>().m_body->GetLinearVelocity(); // 점프했을때 y축 속도는 남김.
+		context<gameuser_machine>().m_body->SetLinearVelocity(b2Vec2(a.x, 10.0f));
+	}
+	return discard_event();
+}
+
+sc::result gameuser_move::react(const evskill<skilltype::skill1> & arg_evt)
+{
 	post_event(arg_evt);
 	post_event(m_evmove); // 다시 무브로 옴..
 	return transit<gameuser_skill<skilltype::skill1>>();
@@ -206,6 +257,8 @@ sc::result gameuser_move::react(const evskill<skilltype::skill2> & arg_evt)
 	post_event(m_evmove);
 	return transit<gameuser_skill<skilltype::skill2>>();
 }
+
+
 
 template<skilltype _skilltype>
 gameuser_skill<_skilltype>::gameuser_skill()

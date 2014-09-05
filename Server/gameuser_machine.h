@@ -177,9 +177,10 @@ public:
 	gameuser_idle();
 	~gameuser_idle();
 	
-	typedef mpl::list< sc::custom_reaction<evtick>, sc::custom_reaction<evmove>, sc::custom_reaction<evskill<skilltype::skill1>>, sc::custom_reaction<evskill<skilltype::skill1>> > reactions;
+	typedef mpl::list< sc::custom_reaction<evtick>, sc::custom_reaction<evmove>, sc::custom_reaction<evjump>, sc::custom_reaction<evskill<skilltype::skill1>>, sc::custom_reaction<evskill<skilltype::skill1>> > reactions;
 	sc::result react(const evtick &arg_evt);
 	sc::result react(const evmove &arg_evt);
+	sc::result react(const evjump &arg_evt);
 
 	sc::result react(const evskill<skilltype::skill1> & arg_evt);
 	sc::result react(const evskill<skilltype::skill2> & arg_evt);
@@ -194,13 +195,15 @@ public:
 class gameuser_move : public sc::simple_state<gameuser_move, gameuser_live::orthogonal<0> >, istatetype
 {
 	evmove m_evmove;
+	bool m_jumped;
 public:
 	gameuser_move();
 	~gameuser_move();
 
-	typedef mpl::list< sc::custom_reaction<evtick>, sc::custom_reaction<evmove>, sc::custom_reaction<evskill<skilltype::skill1>>, sc::custom_reaction<evskill<skilltype::skill1>> > reactions;
+	typedef mpl::list< sc::custom_reaction<evtick>, sc::custom_reaction<evmove>, sc::custom_reaction<evjump>, sc::custom_reaction<evskill<skilltype::skill1>>, sc::custom_reaction<evskill<skilltype::skill1>> > reactions;
 	sc::result react(const evtick &arg_evt);
 	sc::result react(const evmove &arg_evt);
+	sc::result react(const evjump &arg_evt);
 	sc::result react(const evskill<skilltype::skill1> & arg_evt);
 	sc::result react(const evskill<skilltype::skill2> & arg_evt);
 

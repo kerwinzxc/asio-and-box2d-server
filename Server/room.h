@@ -1,5 +1,6 @@
 #pragma once
 #include "def.h"
+#include "body.pb.h"
 
 class room
 	:public boost::enable_shared_from_this<room>, b2ContactListener
@@ -42,7 +43,7 @@ public:
 
 	/// Called when two fixtures cease to touch.
 	virtual void EndContact(b2Contact* contact);
-
-	
+	void process_move(ptr_user_session arg_user, databody::movedirectiontype arg_type);
+	void process_gamemessage(ptr_user_session arg_user, ptr_proto_message arg_message, BYTE arg_type);
 };
 
