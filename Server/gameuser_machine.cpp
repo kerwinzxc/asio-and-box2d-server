@@ -29,6 +29,7 @@ gameuser_machine::gameuser_machine( ptr_b2world arg_world, unsigned arg_gameobje
 	bd.type = b2_dynamicBody;
 	bd.position = y;
 	bd.userData = (void*)m_gameobjectindex;
+	bd.fixedRotation = true;
 	m_body = m_world->CreateBody(&bd);
 	
 	//box
@@ -45,7 +46,7 @@ gameuser_machine::gameuser_machine( ptr_b2world arg_world, unsigned arg_gameobje
 
 // circle sensor 일정 원안에 들어갈경우 개체의 정보를 보낸다.
 	b2CircleShape circleshape;
-	circleshape.m_radius = 30.0f;
+	circleshape.m_radius = 100.0f;
 	circleshape.m_p.Set(0.0f, 0.0f);
 
 	b2FixtureDef fd;
@@ -55,6 +56,7 @@ gameuser_machine::gameuser_machine( ptr_b2world arg_world, unsigned arg_gameobje
 	m_body->CreateFixture(&fd);
 
 	makepacket_gameuser_info();
+	m_StateType = 0;
 }
 
 
@@ -105,7 +107,7 @@ void gameuser_machine::makepacket_gameuser_data()
 		m_data->set_vely(lv.y);
 		
 		m_body->GetAngularVelocity(); // 각속도
-		m_data->set_state(1);
+		m_data->set_state(m_StateType);
 	}
 }
 
@@ -131,7 +133,7 @@ gameuser_live::~gameuser_live()
 
 gameuser_idle::gameuser_idle()
 {
-
+	//context<gameuser_machine>().SetStateType(1);
 }
 
 gameuser_idle::~gameuser_idle()
@@ -156,25 +158,18 @@ sc::result gameuser_idle::react(const evjump &arg_evt)
 	return transit<gameuser_move>();
 }
 
-sc::result gameuser_idle::react(const evskill<skilltype::skill1> & arg_evt)
+sc::result gameuser_idle::react(const evskill & arg_evt)
 {
 	post_event(arg_evt);
-	return transit<gameuser_skill<skilltype::skill1>>();
+	return transit<gameuser_skill1>();
 }
-
-sc::result gameuser_idle::react(const evskill<skilltype::skill2> & arg_evt)
-{
-	post_event(arg_evt);
-	return transit<gameuser_skill<skilltype::skill2>>();
-}
-
 
 
 gameuser_move::gameuser_move()
 	:m_evmove(databody::movedirectiontype::_none)
 	, m_jumped(false)
 {
-
+	//context<gameuser_machine>().SetStateType(2);
 }
 
 gameuser_move::~gameuser_move()
@@ -243,46 +238,19 @@ sc::result gameuser_move::react(const evjump &arg_evt)
 	return discard_event();
 }
 
-sc::result gameuser_move::react(const evskill<skilltype::skill1> & arg_evt)
+sc::result gameuser_move::react(const evskill & arg_evt)
 {
-	post_event(arg_evt);
-	post_event(m_evmove); // 다시 무브로 옴..
-	return transit<gameuser_skill<skilltype::skill1>>();
-}
+	//post_event(arg_evt);
+	//post_event(m_evmove); // 다시 무브로 옴..
+	//return transit<gameuser_skill<skilltype::skill1>>();
 
-sc::result gameuser_move::react(const evskill<skilltype::skill2> & arg_evt)
-{
-	post_event(arg_evt);
-	post_event(m_evmove);
-	return transit<gameuser_skill<skilltype::skill2>>();
+	return discard_event();
 }
 
 
-
-template<skilltype _skilltype>
-gameuser_skill<_skilltype>::gameuser_skill()
+sc::result gameuser_skill1::react(const evtick &arg_evt)
 {
-	skill_interface* p = NULL;
-	if (_skilltype == skilltype::skill1)
-	{
-		m_skillinterface = new skill1_def();
-	}
-	if (_skilltype == skilltype::skill2)
-	{
-		m_skillinterface = new skill2_def();
-	}
-	
-}
-
-template<skilltype _skilltype>
-gameuser_skill<_skilltype>::~gameuser_skill()
-{
-	delete m_skillinterface;
-}
-
-template<skilltype _skilltype>
-sc::result gameuser_skill<_skilltype>::react(const evtick &arg_evt)
-{
+	/*
 	m_cooltime += arg_evt.m_tick;
 
 	m_skillinterface->tick(arg_evt);
@@ -292,15 +260,43 @@ sc::result gameuser_skill<_skilltype>::react(const evtick &arg_evt)
 	{
 		return transit< gameuser_idle >();
 	}
+	*/
 	
 	return forward_event();
 }
+
+gameuser_skill1::gameuser_skill1()
+{
+	//context<gameuser_machine>().SetStateType(3);
+}
+
+gameuser_skill1::~gameuser_skill1()
+{
+
+}
+
+
+gameuser_skill2::gameuser_skill2()
+{
+	//context<gameuser_machine>().SetStateType(4);
+}
+
+gameuser_skill2::~gameuser_skill2()
+{
+
+}
+
+sc::result gameuser_skill2::react(const evtick &arg_evt)
+{
+	return discard_event();
+}
+
 
 
 gameuser_dead::gameuser_dead()
 	:m_cooltime(0.0f)
 {
-
+	//context<gameuser_machine>().SetStateType(5);
 }
 
 gameuser_dead::~gameuser_dead()

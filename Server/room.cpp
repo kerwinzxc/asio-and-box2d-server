@@ -47,7 +47,16 @@ void room::start()
 
 	ptr_gameobject obj = boost::make_shared<staticobject>(m_world, m_makeindex,vec, 4);
 	obj->initiate();
-	m_gameobjectindexmap.insert(tgameobjectindexmap::value_type( obj->get_gameobjectindex(), obj));
+	m_gameobjectindexmap.insert(tgameobjectindexmap::value_type(obj->get_gameobjectindex(), obj));
+
+	b2Vec2 vec2[2];
+	vec2[0].Set(-10, 4);
+	vec2[1].Set(10, 4);
+	ptr_gameobject obj2 = boost::make_shared<staticobject>(m_world, m_makeindex, vec2, 2);
+	obj2->initiate();
+	m_gameobjectindexmap.insert(tgameobjectindexmap::value_type(obj2->get_gameobjectindex(), obj2));
+	
+	
 }
 
 void room::update()
@@ -290,4 +299,49 @@ void room::process_gamemessage(ptr_user_session arg_user, ptr_proto_message arg_
 			}
 		}
 	});
+}
+
+void room::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
+{
+
+	const b2Manifold* manifold = contact->GetManifold();
+
+	if (manifold->pointCount == 0)
+	{
+		return;
+	}
+
+	b2PointState state1[b2_maxManifoldPoints], state2[b2_maxManifoldPoints];
+	b2GetPointStates(state1, state2, oldManifold, manifold);
+
+	b2WorldManifold worldManifold;
+	contact->GetWorldManifold(&worldManifold);
+
+	
+	
+	b2Fixture* a =  contact->GetFixtureA();
+	b2Vec2 veca = a->GetBody()->GetPosition();
+	b2Fixture* b = contact->GetFixtureB();
+	b2Vec2 vecb = b->GetBody()->GetPosition();
+
+	int _fixtureA = (int)contact->GetFixtureA()->GetUserData();	
+	int _fixtureB = (int)contact->GetFixtureB()->GetUserData();
+
+	if (_fixtureA == FixtureTag_GameuserBody && _fixtureB == FixtureTag_MapObject
+		|| _fixtureA == FixtureTag_MapObject && _fixtureB == FixtureTag_GameuserBody)
+	{
+		if (_fixtureA == FixtureTag_MapObject)
+		{
+			std::swap(veca, vecb);			
+		}
+
+
+		cout << state1[0] << state1[1] << state1[0] << state1[1] << endl;
+		cout << veca.y << "       " << vecb.y << endl;
+
+		if (veca.y < worldManifold.points[0].y) // body 와 충돌포인트 높이 비교
+		{
+			contact->SetEnabled(false); // 충돌 처리를 off 할수 있다.
+		}
+	}	
 }

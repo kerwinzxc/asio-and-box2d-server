@@ -29,11 +29,15 @@ struct evmove : sc::event < evmove > {
 	evmove(databody::movedirectiontype arg_type)
 		:m_type(arg_type)
 	{
-
 	}
 };
-template< skilltype _skilltype >
-struct evskill : sc::event < evskill<_skilltype> > {};
+struct evskill : sc::event < evskill > {
+	skilltype m_skilltype;
+	evskill(skilltype arg_skilltype)
+		:m_skilltype(arg_skilltype)
+	{
+	}
+};
 struct evjump : sc::event < evjump > {};
 struct evland : sc::event < evland > {};
 

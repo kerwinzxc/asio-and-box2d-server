@@ -167,7 +167,6 @@
     <ClInclude Include="event.h" />
     <ClInclude Include="interface.h" />
     <ClInclude Include="gameuser_machine.h" />
-    <ClInclude Include="gameuser_skilldef.h" />
     <ClInclude Include="multi_index.h" />
     <ClInclude Include="packet_decoder.h" />
     <ClInclude Include="packet_encoder.h" />
@@ -186,7 +185,6 @@
   <ItemGroup>
     <ClCompile Include="body.pb.cc" />
     <ClCompile Include="gameuser_machine.cpp" />
-    <ClCompile Include="gameuser_skilldef.cpp" />
     <ClCompile Include="interface.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="multi_index.cpp" />

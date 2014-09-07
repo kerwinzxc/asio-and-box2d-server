@@ -1,15 +1,8 @@
 #pragma once
 #include "def.h"
-#include "gameuser_skilldef.h"
 #include "event.h"
 #include "body.pb.h"
 #include "packet_encoder.h"
-
-
-struct istatetype 
-{
-	virtual int getstatetype() const = 0;
-};
 
 
 class gameuser_machine : public sc::state_machine < gameuser_machine, gameuser_common >
@@ -25,6 +18,8 @@ public:
 	unsigned int m_gameobjectindex;
 	gameobject* m_gameobject;
 
+	int m_StateType;
+	
 
 	b2Body* m_body;
 	b2Body* m_sword;
@@ -59,6 +54,8 @@ public:
 		m_infolist.erase(arg_gameobject);
 		m_datalist.erase(arg_gameobject);
 	}
+
+	void SetStateType(int val) { m_StateType = val; }
 	
 };
 
@@ -109,7 +106,7 @@ public :
 
 };
 
-class gameuser_common : public sc::simple_state < gameuser_common, gameuser_machine, gameuser_live >, istatetype
+class gameuser_common : public sc::simple_state < gameuser_common, gameuser_machine, gameuser_live >
 {
 public:
 	gameuser_common();
@@ -132,13 +129,9 @@ public:
 	sc::result react(const evaddgameobject &arg_evt);
 	sc::result react(const evdeletegameobject &arg_evt);
 
-	virtual int getstatetype() const
-	{
-		return 20;
-	}
 };
 
-class gameuser_dead : public sc::simple_state < gameuser_dead, gameuser_common > , istatetype
+class gameuser_dead : public sc::simple_state < gameuser_dead, gameuser_common > 
 {
 	float m_cooltime; 
 public:
@@ -148,52 +141,35 @@ public:
 	typedef mpl::list< sc::custom_reaction<evtick> > reactions;
 	sc::result react(const evtick &arg_evt);
 
-	virtual int getstatetype() const
-	{
-		return 0;
-	}
 
 private:
 
 };
 
-class gameuser_live : public sc::simple_state<gameuser_live, gameuser_common, mpl::list< gameuser_idle, gameuser_condition>>, istatetype
+class gameuser_live : public sc::simple_state<gameuser_live, gameuser_common, mpl::list< gameuser_idle, gameuser_condition>>
 {
 public:
 	
 	gameuser_live();
 	~gameuser_live();
 
-//	typedef mpl::list< sc::custom_reaction<evtick> > reactions;
-//	sc::result react(const evtick &arg_evt);
-	virtual int getstatetype() const
-	{
-		return 20;
-	}
 };
 
-class gameuser_idle : public sc::simple_state<gameuser_idle, gameuser_live::orthogonal<0> >, istatetype
+class gameuser_idle : public sc::simple_state<gameuser_idle, gameuser_live::orthogonal<0> >
 {
 public:
 	gameuser_idle();
 	~gameuser_idle();
 	
-	typedef mpl::list< sc::custom_reaction<evtick>, sc::custom_reaction<evmove>, sc::custom_reaction<evjump>, sc::custom_reaction<evskill<skilltype::skill1>>, sc::custom_reaction<evskill<skilltype::skill1>> > reactions;
+	typedef mpl::list< sc::custom_reaction<evtick>, sc::custom_reaction<evmove>, sc::custom_reaction<evjump>, sc::custom_reaction<evskill>> reactions;
 	sc::result react(const evtick &arg_evt);
 	sc::result react(const evmove &arg_evt);
 	sc::result react(const evjump &arg_evt);
-
-	sc::result react(const evskill<skilltype::skill1> & arg_evt);
-	sc::result react(const evskill<skilltype::skill2> & arg_evt);
-
-	virtual int getstatetype() const
-	{
-		return 1;
-	}
+	sc::result react(const evskill & arg_evt);
 };
 
 
-class gameuser_move : public sc::simple_state<gameuser_move, gameuser_live::orthogonal<0> >, istatetype
+class gameuser_move : public sc::simple_state<gameuser_move, gameuser_live::orthogonal<0> >
 {
 	evmove m_evmove;
 	bool m_jumped;
@@ -201,28 +177,20 @@ public:
 	gameuser_move();
 	~gameuser_move();
 
-	typedef mpl::list< sc::custom_reaction<evtick>, sc::custom_reaction<evmove>, sc::custom_reaction<evjump>, sc::custom_reaction<evskill<skilltype::skill1>>, sc::custom_reaction<evskill<skilltype::skill1>> > reactions;
+	typedef mpl::list< sc::custom_reaction<evtick>, sc::custom_reaction<evmove>, sc::custom_reaction<evjump>, sc::custom_reaction<evskill> > reactions;
 	sc::result react(const evtick &arg_evt);
 	sc::result react(const evmove &arg_evt);
 	sc::result react(const evjump &arg_evt);
-	sc::result react(const evskill<skilltype::skill1> & arg_evt);
-	sc::result react(const evskill<skilltype::skill2> & arg_evt);
+	sc::result react(const evskill & arg_evt);
 
-	virtual int getstatetype() const
-	{
-		return 2;
-	}
 };
-class skill_interface;
 
-template<skilltype _skilltype>
-class gameuser_skill : public sc::simple_state<gameuser_skill<_skilltype>, gameuser_live::orthogonal<0> >, istatetype
+class gameuser_skill1 : public sc::simple_state<gameuser_skill1, gameuser_live::orthogonal<0> >
 {
 	float m_cooltime;
-	skill_interface* m_skillinterface;
 public:
-	gameuser_skill();
-	~gameuser_skill();
+	gameuser_skill1();
+	~gameuser_skill1();
 
 	typedef mpl::list< sc::custom_reaction<evtick>, sc::deferral<evmove> > reactions;
 	sc::result react(const evtick &arg_evt);
@@ -231,6 +199,19 @@ public:
 	{
 		return 3;
 	}
+};
+
+
+class gameuser_skill2 : public sc::simple_state<gameuser_skill2, gameuser_live::orthogonal<0> >
+{
+	float m_cooltime;
+public:
+	gameuser_skill2();
+	~gameuser_skill2();
+
+	typedef mpl::list< sc::custom_reaction<evtick>, sc::deferral<evmove> > reactions;
+	sc::result react(const evtick &arg_evt);
+
 };
 
 
