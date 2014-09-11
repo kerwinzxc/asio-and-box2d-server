@@ -55,7 +55,7 @@ void user_session::do_receive()
 					if (_login->loginstep() == 1)
 					{
 						m_deviceid = _login->deviceid();
-						user_session_manager::getInst().add_tcp_login_user(shared_from_this(), _login->deviceid(), boost::bind(&user_session::handle_add_tcp_user, shared_from_this(), _1));						
+						user_session_manager::getInst().add_tcp_login_user(shared_from_this(), _login->deviceid(), boost::bind(&user_session::handle_add_tcp_user, shared_from_this(), _1));
 					}
 					else if (_login->loginstep() == 5)
 					{

@@ -30,6 +30,7 @@
 #include <boost\date_time\posix_time\posix_time.hpp>
 #include <boost\coroutine\all.hpp>
 #include <boost\mpl\list.hpp>
+#include <boost\log\trivial.hpp>
 
 
 #include <boost\statechart\state_machine.hpp>

@@ -5,6 +5,7 @@
 #include "packet_encoder.h"
 
 
+
 gameuser_machine::gameuser_machine( ptr_b2world arg_world, unsigned arg_gameobjectindex)
 	:m_world(arg_world)
 	,m_gameobjectindex(arg_gameobjectindex)
@@ -57,6 +58,7 @@ gameuser_machine::gameuser_machine( ptr_b2world arg_world, unsigned arg_gameobje
 
 	makepacket_gameuser_info();
 	m_StateType = 0;
+
 }
 
 
@@ -121,6 +123,17 @@ databody::gameuser_data* gameuser_machine::get_gameuser_data() const
 	return m_data;
 }
 
+void gameuser_machine::RayCast(raycastcallback* callback, const b2Vec2& point, const float& angle) const
+{
+	float32 L = 2.0f;
+	b2Vec2 point1 = m_body->GetPosition();
+	point1 += point;
+	b2Vec2 d(L * cosf(angle * (b2_pi / 180)), L * sinf(angle * (b2_pi / 180)));
+	b2Vec2 point2 = point1 + d;
+	callback->m_ignorebody;
+	m_world->RayCast(callback, point1, point2);
+}
+
 gameuser_live::gameuser_live()
 {
 
@@ -143,6 +156,7 @@ gameuser_idle::~gameuser_idle()
 
 sc::result gameuser_idle::react(const evtick &arg_evt)
 {
+	//return transit<gameuser_skill1>();
 	return forward_event();
 }
 
@@ -250,6 +264,18 @@ sc::result gameuser_move::react(const evskill & arg_evt)
 
 sc::result gameuser_skill1::react(const evtick &arg_evt)
 {
+	RayCastClosestCallback a;
+	b2Vec2 vec(-0.5, 0.0f);
+
+	context<gameuser_machine>().RayCast(&a, vec, m_angle);
+	if (a.m_hit == true)
+		cout << "hit  angle" << m_angle << endl;
+
+	m_angle += arg_evt.m_tick*30;
+	if (m_angle > 360.0f)
+	{
+		m_angle -= 360.0f;
+	}
 	/*
 	m_cooltime += arg_evt.m_tick;
 
@@ -267,6 +293,7 @@ sc::result gameuser_skill1::react(const evtick &arg_evt)
 
 gameuser_skill1::gameuser_skill1()
 {
+	m_angle = 0.0f;
 	//context<gameuser_machine>().SetStateType(3);
 }
 

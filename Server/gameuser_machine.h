@@ -3,7 +3,7 @@
 #include "event.h"
 #include "body.pb.h"
 #include "packet_encoder.h"
-
+#include "Raycast.h"
 
 class gameuser_machine : public sc::state_machine < gameuser_machine, gameuser_common >
 {
@@ -56,6 +56,8 @@ public:
 	}
 
 	void SetStateType(int val) { m_StateType = val; }
+
+	void RayCast(raycastcallback* callback, const b2Vec2& point1, const float& angle) const;
 	
 };
 
@@ -188,6 +190,7 @@ public:
 class gameuser_skill1 : public sc::simple_state<gameuser_skill1, gameuser_live::orthogonal<0> >
 {
 	float m_cooltime;
+	float m_angle;
 public:
 	gameuser_skill1();
 	~gameuser_skill1();

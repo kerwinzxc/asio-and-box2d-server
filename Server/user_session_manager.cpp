@@ -34,8 +34,18 @@ void user_session_manager::add_tcp_login_user(ptr_user_session arg_user_session,
 	{
 		
 		boost::uuids::uuid u = gen(arg_deviceid);
-		m_set.insert(userdata(u, arg_user_session));
-		arg_handler(u);
+		auto a = m_set.insert(userdata(u, arg_user_session));
+		if (a.second == false)
+		{
+			//duplication user.. device id 
+			a.first->m_user_session->session_end();
+			arg_user_session->session_end();
+		}
+		else
+		{
+			arg_handler(u);
+		}
+		
 	});
 }
 

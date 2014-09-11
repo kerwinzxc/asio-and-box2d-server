@@ -27,7 +27,6 @@ server::~server()
 
 void server::run()
 {
-	
 	init_singgleton();
 
 

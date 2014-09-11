@@ -33,6 +33,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	gm.process_event(evtick(1.1f));
 	gm.process_event(evtick(1.1f));
 	*/
+
+
 		server s(8999, 9258);
 		s.run();
 
@@ -51,4 +53,5 @@ int _tmain(int argc, _TCHAR* argv[])
 // }
 	return 0;
 }
+
 

@@ -72,7 +72,7 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros">
-    <NuGetPackageImportStamp>24a16859</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>3ce8460b</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -102,6 +102,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalOptions>/Zm200 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -116,6 +117,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;_WINSOCK_DEPRECATED_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalOptions>/Zm200 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -171,6 +173,7 @@
     <ClInclude Include="packet_decoder.h" />
     <ClInclude Include="packet_encoder.h" />
     <ClInclude Include="packet_data.h" />
+    <ClInclude Include="Raycast.h" />
     <ClInclude Include="room.h" />
     <ClInclude Include="room_provider.h" />
     <ClInclude Include="server.h" />
@@ -227,6 +230,8 @@
     <Import Project="..\packages\boost_chrono-vc120.1.56.0.0\build\native\boost_chrono-vc120.targets" Condition="Exists('..\packages\boost_chrono-vc120.1.56.0.0\build\native\boost_chrono-vc120.targets')" />
     <Import Project="..\packages\Box2D.2.3.0.7\build\native\Box2D.targets" Condition="Exists('..\packages\Box2D.2.3.0.7\build\native\Box2D.targets')" />
     <Import Project="..\packages\myprotobuf_vc120.2.5.0.0\build\native\myprotobuf_vc120.targets" Condition="Exists('..\packages\myprotobuf_vc120.2.5.0.0\build\native\myprotobuf_vc120.targets')" />
+    <Import Project="..\packages\boost_log-vc120.1.56.0.0\build\native\boost_log-vc120.targets" Condition="Exists('..\packages\boost_log-vc120.1.56.0.0\build\native\boost_log-vc120.targets')" />
+    <Import Project="..\packages\boost_filesystem-vc120.1.56.0.0\build\native\boost_filesystem-vc120.targets" Condition="Exists('..\packages\boost_filesystem-vc120.1.56.0.0\build\native\boost_filesystem-vc120.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -245,5 +250,7 @@
     <Error Condition="!Exists('..\packages\boost_chrono-vc120.1.56.0.0\build\native\boost_chrono-vc120.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost_chrono-vc120.1.56.0.0\build\native\boost_chrono-vc120.targets'))" />
     <Error Condition="!Exists('..\packages\Box2D.2.3.0.7\build\native\Box2D.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Box2D.2.3.0.7\build\native\Box2D.targets'))" />
     <Error Condition="!Exists('..\packages\myprotobuf_vc120.2.5.0.0\build\native\myprotobuf_vc120.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\myprotobuf_vc120.2.5.0.0\build\native\myprotobuf_vc120.targets'))" />
+    <Error Condition="!Exists('..\packages\boost_log-vc120.1.56.0.0\build\native\boost_log-vc120.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost_log-vc120.1.56.0.0\build\native\boost_log-vc120.targets'))" />
+    <Error Condition="!Exists('..\packages\boost_filesystem-vc120.1.56.0.0\build\native\boost_filesystem-vc120.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost_filesystem-vc120.1.56.0.0\build\native\boost_filesystem-vc120.targets'))" />
   </Target>
 </Project>
