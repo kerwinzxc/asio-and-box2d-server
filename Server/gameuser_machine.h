@@ -5,6 +5,19 @@
 #include "packet_encoder.h"
 #include "Raycast.h"
 
+
+class gameuser_live;
+
+class gameuser_idle;
+class gameuser_move;
+class gameuser_skill1;
+class gameuser_skill2;
+
+class gameuser_condition;// 상태이상 , stat 변경,
+
+class gameuser_dead;
+class gameuser_common;
+
 class gameuser_machine : public sc::state_machine < gameuser_machine, gameuser_common >
 {
 
@@ -14,6 +27,7 @@ public:
 	float m_movespeed;
 	float m_curplayerhp;
 	float m_maxplayerhp;
+	float m_swordangle;
 
 	unsigned int m_gameobjectindex;
 	gameobject* m_gameobject;
@@ -22,8 +36,6 @@ public:
 	
 
 	b2Body* m_body;
-	b2Body* m_sword;
-
 	ptr_b2world m_world;
 
 	databody::gameuser_info* m_info;
@@ -32,8 +44,8 @@ public:
 	databody::gameuser_info* get_gameuser_info() const;
 	databody::gameuser_data* get_gameuser_data() const;
 
-	set<weakptr_gameobject> m_infolist;
-	set<weakptr_gameobject> m_datalist;
+	map<weakptr_gameobject,int> m_infolist;
+	map<weakptr_gameobject,int> m_datalist;
 
 
 	gameuser_machine( ptr_b2world arg_world, unsigned arg_gameobjectindex);
@@ -46,8 +58,8 @@ public:
 
 	void addgameobject(ptr_gameobject arg_gameobject)
 	{
-		m_infolist.insert(arg_gameobject);
-		m_datalist.insert(arg_gameobject);
+		m_infolist.insert(map<weakptr_gameobject, int>::value_type(arg_gameobject, arg_gameobject->get_gameobjectindex()));
+		m_datalist.insert(map<weakptr_gameobject, int>::value_type(arg_gameobject, arg_gameobject->get_gameobjectindex()));
 	}
 	void deletegameobject(ptr_gameobject arg_gameobject)
 	{
@@ -115,9 +127,8 @@ public:
 	~gameuser_common();
 
 	// makepacket
-	typedef mpl::list< sc::custom_reaction<evpacketinfolist>
+	typedef mpl::list< sc::custom_reaction<evmakepacketdata>
 		, sc::custom_reaction<evmakedata>
-		, sc::custom_reaction<evpacketdatalist>
 		, sc::custom_reaction<evtick>
 		, sc::custom_reaction<evaddgameobject>
 		, sc::custom_reaction<evdeletegameobject>> reactions;
@@ -125,9 +136,8 @@ public:
 
 
 	sc::result react(const evtick &arg_evt);
-	sc::result react(const evpacketinfolist &arg_evt);
+	sc::result react(const evmakepacketdata &arg_evt);
 	sc::result react(const evmakedata &arg_evt);
-	sc::result react(const evpacketdatalist &arg_evt);
 	sc::result react(const evaddgameobject &arg_evt);
 	sc::result react(const evdeletegameobject &arg_evt);
 
@@ -191,6 +201,11 @@ class gameuser_skill1 : public sc::simple_state<gameuser_skill1, gameuser_live::
 {
 	float m_cooltime;
 	float m_angle;
+
+	bool init;
+	bool loop;
+	bool end;
+
 public:
 	gameuser_skill1();
 	~gameuser_skill1();

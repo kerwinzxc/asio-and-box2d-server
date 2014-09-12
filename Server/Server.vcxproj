@@ -166,6 +166,7 @@
   <ItemGroup>
     <ClInclude Include="body.pb.h" />
     <ClInclude Include="def.h" />
+    <ClInclude Include="dumbmob_machine.h" />
     <ClInclude Include="event.h" />
     <ClInclude Include="interface.h" />
     <ClInclude Include="gameuser_machine.h" />
@@ -187,6 +188,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="body.pb.cc" />
+    <ClCompile Include="dumbmob_machine.cpp" />
     <ClCompile Include="gameuser_machine.cpp" />
     <ClCompile Include="interface.cpp" />
     <ClCompile Include="main.cpp" />

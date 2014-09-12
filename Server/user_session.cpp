@@ -64,6 +64,7 @@ void user_session::do_receive()
 				}
 				if (_type == databody::move::descriptor()->index()
 					|| _type == databody::jump::descriptor()->index()
+					|| _type == databody::skill1::descriptor()->index()
 					)
 				{
 					if (m_room != NULL)

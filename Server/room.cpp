@@ -2,6 +2,7 @@
 #include "room.h"
 #include "gameuser_machine.h"
 #include "staticobject_machine.h"
+#include "dumbmob_machine.h"
 
 #include "packet_data.h"
 #include "packet_encoder.h"
@@ -55,6 +56,11 @@ void room::start()
 	ptr_gameobject obj2 = boost::make_shared<staticobject>(m_world, m_makeindex, vec2, 2);
 	obj2->initiate();
 	m_gameobjectindexmap.insert(tgameobjectindexmap::value_type(obj2->get_gameobjectindex(), obj2));
+
+	b2Vec2 mobposition(1.0f, 0.2f);
+	ptr_gameobject obj3 = boost::make_shared<dumbmob>(m_world, m_makeindex, mobposition);
+	obj3->initiate();
+	m_gameobjectindexmap.insert(tgameobjectindexmap::value_type(obj3->get_gameobjectindex(), obj3));
 	
 	
 }
@@ -63,7 +69,6 @@ void room::update()
 {
 	boost::posix_time::time_duration _duration = boost::asio::time_traits<boost::posix_time::ptime>::subtract(m_timer.expires_at(), m_pretime);
 	float _seconds = _duration.total_milliseconds() / 1000.0f;
-	//cout << _seconds << endl;
 	
 	m_pretime = m_timer.expires_at();
 	m_timer.expires_at(m_timer.expires_at() + boost::posix_time::milliseconds(66));
@@ -71,53 +76,49 @@ void room::update()
 	m_world->Step(_seconds, 10, 10);
 
 
-	auto _cur = m_gameobjectmap.begin();
-	while (_cur != m_gameobjectmap.end())
+	auto _indexcur = m_gameobjectindexmap.begin();
+	while (_indexcur != m_gameobjectindexmap.end())
 	{
 		evmakedata evt;
 		evtick _evttick(_seconds);
 
-		_cur->second->process_event(_evttick); // tick
-		_cur->second->process_event(evt); // make data
-		_cur++;
+		_indexcur->second->process_event(_evttick); // tick
+		_indexcur->second->process_event(evt); // make data
+		_indexcur++;
 		
 	}
 
-	_cur = m_gameobjectmap.begin();
-	while (_cur != m_gameobjectmap.end())
+	auto _cur = m_usersessiongameobjectmap.begin();
+	while (_cur != m_usersessiongameobjectmap.end())
 	{
 		auto _ptr = _cur->first.lock();
 		if (_ptr != NULL)
 		{
+			ptr_packet_data _tcpdata = boost::make_shared<packet_data>();
+			packet_encoder _tcpencode(_tcpdata);
+
+			ptr_packet_data _udpdata = boost::make_shared<packet_data>();
+			packet_encoder _udpencode(_udpdata);
+		
+			evmakepacketdata evti(&_tcpencode, &_udpencode);
+			_cur->second->process_event(evti); // make data
+			_tcpencode.makeheader();
+			_udpencode.makeheader();
+			if (_tcpdata->get_bodysize() != 0)
 			{
-				ptr_packet_data _data = boost::make_shared<packet_data>();
-				packet_encoder _encode(_data);
-				evpacketinfolist evti(&_encode);
-				_cur->second->process_event(evti); // make data
-				_encode.makeheader();
-				if (_data->get_bodysize() != 0)
-				{
-					_ptr->do_writequeue(_data, packet_sendtype::tcp); // one tick info
-				}
+				_ptr->do_writequeue(_tcpdata, packet_sendtype::tcp); // one tick info
+			}
+			if (_udpdata->get_bodysize() != 0)
+			{
+				_ptr->do_writequeue(_udpdata, packet_sendtype::udp); // all tick position data
 			}
 
-			{
-				ptr_packet_data _data = boost::make_shared<packet_data>();
-				packet_encoder _encode(_data);
-				evpacketdatalist evtd(&_encode);
-				_cur->second->process_event(evtd); // make data
-				_encode.makeheader();
-				if (_data->get_bodysize() != 0)
-				{
-					_ptr->do_writequeue(_data, packet_sendtype::udp); // all tick position data
-				}
-			}
 			_cur++;
 		}
 		else
 		{
 			m_gameobjectindexmap.erase(_cur->second->get_gameobjectindex());
-			_cur = m_gameobjectmap.erase(_cur);
+			_cur = m_usersessiongameobjectmap.erase(_cur);
 		}
 	}
 
@@ -132,7 +133,7 @@ void room::dispatch_join(ptr_user_session arg_user, boost::function<void(ptr_roo
 
 		obj->initiate();
 
-		m_gameobjectmap.insert(tgameobjectmap::value_type( arg_user, obj));
+		m_usersessiongameobjectmap.insert(tgameobjectmap::value_type( arg_user, obj));
 		m_gameobjectindexmap.insert(tgameobjectindexmap::value_type(obj->get_gameobjectindex(),obj));
 
 		ptr_packet_data _data = boost::make_shared<packet_data>();
@@ -155,13 +156,13 @@ void room::dispatch_exit(ptr_user_session arg_user, boost::function<void(ptr_roo
 	m_strand.dispatch([&, arg_user, arg_roomprovider_handler, arg_user_handler](){
 		m_userset.erase(arg_user);
 		
-		auto obj = m_gameobjectmap.find(arg_user);
-		if (obj != m_gameobjectmap.end())
+		auto obj = m_usersessiongameobjectmap.find(arg_user);
+		if (obj != m_usersessiongameobjectmap.end())
 		{
 			m_gameobjectindexmap.erase(obj->second->get_gameobjectindex());
 		}
 		
-		m_gameobjectmap.erase(arg_user);		
+		m_usersessiongameobjectmap.erase(arg_user);		
 		arg_roomprovider_handler(shared_from_this());
 		arg_user_handler();
 		
@@ -262,18 +263,6 @@ void room::EndContact(b2Contact* contact)
 	}
 	//update
 }
-void room::process_move(ptr_user_session arg_user, databody::movedirectiontype arg_type)
-{
-	m_strand.dispatch([&, arg_user, arg_type](){
-
-		auto obj = m_gameobjectmap.find(arg_user);
-		if (obj != m_gameobjectmap.end())
-		{
-			evmove evt(arg_type);
-			obj->second->process_event(evt);
-		}
-	});
-}
 
 void room::process_gamemessage(ptr_user_session arg_user, ptr_proto_message arg_message, BYTE arg_type)
 {
@@ -282,8 +271,8 @@ void room::process_gamemessage(ptr_user_session arg_user, ptr_proto_message arg_
 		if (arg_type == databody::move::descriptor()->index())
 		{
 			databody::move* _move = (databody::move*)arg_message.get();
-			auto obj = m_gameobjectmap.find(arg_user);
-			if (obj != m_gameobjectmap.end())
+			auto obj = m_usersessiongameobjectmap.find(arg_user);
+			if (obj != m_usersessiongameobjectmap.end())
 			{
 				evmove evt(_move->direction());
 				obj->second->process_event(evt);
@@ -291,11 +280,21 @@ void room::process_gamemessage(ptr_user_session arg_user, ptr_proto_message arg_
 		}
 		else if (arg_type == databody::jump::descriptor()->index())
 		{
-			auto obj = m_gameobjectmap.find(arg_user);
-			if (obj != m_gameobjectmap.end())
+			auto obj = m_usersessiongameobjectmap.find(arg_user);
+			if (obj != m_usersessiongameobjectmap.end())
 			{
 				evjump evt;
 				obj->second->process_event(evt);
+			}
+		}
+		else if (arg_type == databody::skill1::descriptor()->index())
+		{
+			auto obj = m_usersessiongameobjectmap.find(arg_user);
+			if (obj != m_usersessiongameobjectmap.end())
+			{
+				evskill evt(skill1);
+				obj->second->process_event(evt);
+
 			}
 		}
 	});

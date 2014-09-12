@@ -1,17 +1,7 @@
 #pragma once
 #include "body.pb.h"
 
-class gameuser_live;
 
-class gameuser_idle;
-class gameuser_move;
-class gameuser_skill1;
-class gameuser_skill2;
-
-class gameuser_condition;// 상태이상 , stat 변경,
-
-class gameuser_dead;
-class gameuser_common;
 
 
 
@@ -44,23 +34,17 @@ struct evland : sc::event < evland > {};
 
 struct evmakedata : sc::event < evmakedata > {};
 
-struct evpacketdatalist : sc::event < evpacketdatalist > {
-	packet_encoder* m_packet;
-	evpacketdatalist(packet_encoder* arg_packet)
-		:m_packet(arg_packet)
+struct evmakepacketdata : sc::event < evmakepacketdata > {
+	packet_encoder* m_tcppacket;
+	packet_encoder* m_udppacket;
+	evmakepacketdata(packet_encoder* arg_tcppacket, packet_encoder* arg_udppacket)
+		: m_tcppacket(arg_tcppacket)
+		, m_udppacket(arg_udppacket)
 	{
 
 	}
 };
 
-struct evpacketinfolist : sc::event < evpacketinfolist > {
-	packet_encoder* m_packet;
-	evpacketinfolist(packet_encoder* arg_packet)
-		:m_packet(arg_packet)
-	{
-
-	}
-};
 
 struct evaddgameobject : sc::event < evaddgameobject > 
 {

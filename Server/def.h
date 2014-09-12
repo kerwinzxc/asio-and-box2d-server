@@ -5,20 +5,22 @@ using boost::asio::ip::udp;
 
 
 
-
-namespace databody
-{
-	class gameuser_data;
-	class gameuser_info;
-	class staticobject_info;
-	class login;
-	class join;
-	class exit;
-	class move;
-	class jump;
-	class skill1;
-	class commandresult;
-}
+//
+//namespace databody
+//{
+//	class gameuser_data;
+//	class gameuser_info;
+//	class dumbmob_data;
+//	class dumbmob_info;
+//	class staticobject_info;
+//	class login;
+//	class join;
+//	class exit;
+//	class move;
+//	class jump;
+//	class skill1;
+//	class commandresult;
+//}
 
 namespace google
 {
@@ -41,6 +43,7 @@ class packet_decoder;
 
 class gameuser_machine;
 class staticobject_machine;
+class dumbmob_machine;
 class gameobject;
 class util_makeindex;
 class udpserver;
@@ -58,6 +61,7 @@ typedef boost::shared_ptr< state_unit > ptr_state_unit;
 typedef boost::shared_ptr< b2World > ptr_b2world;
 typedef boost::shared_ptr< gameuser_machine > ptr_gameuser_machine;
 typedef boost::shared_ptr< staticobject_machine > ptr_staticobject_machine;
+typedef boost::shared_ptr< dumbmob_machine > ptr_dumbmob_machine;
 typedef boost::shared_ptr< gameobject > ptr_gameobject;
 typedef boost::shared_ptr< util_makeindex > ptr_makeindex;
 typedef boost::shared_ptr< google::protobuf::Message > ptr_proto_message;
@@ -81,7 +85,11 @@ typedef boost::weak_ptr < gameobject > weakptr_gameobject;
 #define FixtureTag_GameuserBodyRader2 3
 #define FixtureTag_GameuserBodyRader3 4
 #define FixtureTag_GameuserBodyRader4 5
-#define FixtureTag_MapObject 6
+
+#define FixtureTag_MobBody 6
+
+
+#define FixtureTag_MapObject 100
 
 enum packet_sendtype{ tcp , udp};
 

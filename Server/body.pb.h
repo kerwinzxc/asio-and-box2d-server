@@ -37,6 +37,9 @@ void protobuf_ShutdownFile_body_2eproto();
 class gameuser_data;
 class gameuser_info;
 class staticobject_info;
+class dumbmob_info;
+class dumbmob_data;
+class leave_object;
 class login;
 class join;
 class exit;
@@ -87,33 +90,6 @@ inline bool commandtype_Parse(
     const ::std::string& name, commandtype* value) {
   return ::google::protobuf::internal::ParseNamedEnum<commandtype>(
     commandtype_descriptor(), name, value);
-}
-enum messagetype {
-  _gameuser_data = 0,
-  _gameuser_info = 1,
-  _staticobject_info = 2,
-  _login = 3,
-  _join = 4,
-  _exit = 5,
-  _move = 6,
-  _jump = 7,
-  _skill1 = 8,
-  _commandresult = 9
-};
-bool messagetype_IsValid(int value);
-const messagetype messagetype_MIN = _gameuser_data;
-const messagetype messagetype_MAX = _commandresult;
-const int messagetype_ARRAYSIZE = messagetype_MAX + 1;
-
-const ::google::protobuf::EnumDescriptor* messagetype_descriptor();
-inline const ::std::string& messagetype_Name(messagetype value) {
-  return ::google::protobuf::internal::NameOfEnum(
-    messagetype_descriptor(), value);
-}
-inline bool messagetype_Parse(
-    const ::std::string& name, messagetype* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<messagetype>(
-    messagetype_descriptor(), name, value);
 }
 enum movedirectiontype {
   _none = 0,
@@ -248,6 +224,13 @@ class gameuser_data : public ::google::protobuf::Message {
   inline float vely() const;
   inline void set_vely(float value);
 
+  // required float swordangle = 9;
+  inline bool has_swordangle() const;
+  inline void clear_swordangle();
+  static const int kSwordangleFieldNumber = 9;
+  inline float swordangle() const;
+  inline void set_swordangle(float value);
+
   // @@protoc_insertion_point(class_scope:databody.gameuser_data)
  private:
   inline void set_has_gameobject_index();
@@ -266,6 +249,8 @@ class gameuser_data : public ::google::protobuf::Message {
   inline void clear_has_velx();
   inline void set_has_vely();
   inline void clear_has_vely();
+  inline void set_has_swordangle();
+  inline void clear_has_swordangle();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -277,9 +262,10 @@ class gameuser_data : public ::google::protobuf::Message {
   ::google::protobuf::int32 state_;
   float velx_;
   float vely_;
+  float swordangle_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(8 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(9 + 31) / 32];
 
   friend void  protobuf_AddDesc_body_2eproto();
   friend void protobuf_AssignDesc_body_2eproto();
@@ -527,6 +513,342 @@ class staticobject_info : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static staticobject_info* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class dumbmob_info : public ::google::protobuf::Message {
+ public:
+  dumbmob_info();
+  virtual ~dumbmob_info();
+
+  dumbmob_info(const dumbmob_info& from);
+
+  inline dumbmob_info& operator=(const dumbmob_info& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const dumbmob_info& default_instance();
+
+  void Swap(dumbmob_info* other);
+
+  // implements Message ----------------------------------------------
+
+  dumbmob_info* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const dumbmob_info& from);
+  void MergeFrom(const dumbmob_info& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required int32 gameobject_index = 1;
+  inline bool has_gameobject_index() const;
+  inline void clear_gameobject_index();
+  static const int kGameobjectIndexFieldNumber = 1;
+  inline ::google::protobuf::int32 gameobject_index() const;
+  inline void set_gameobject_index(::google::protobuf::int32 value);
+
+  // required int32 type = 2;
+  inline bool has_type() const;
+  inline void clear_type();
+  static const int kTypeFieldNumber = 2;
+  inline ::google::protobuf::int32 type() const;
+  inline void set_type(::google::protobuf::int32 value);
+
+  // required float mass = 3;
+  inline bool has_mass() const;
+  inline void clear_mass();
+  static const int kMassFieldNumber = 3;
+  inline float mass() const;
+  inline void set_mass(float value);
+
+  // required float max_hp = 4;
+  inline bool has_max_hp() const;
+  inline void clear_max_hp();
+  static const int kMaxHpFieldNumber = 4;
+  inline float max_hp() const;
+  inline void set_max_hp(float value);
+
+  // @@protoc_insertion_point(class_scope:databody.dumbmob_info)
+ private:
+  inline void set_has_gameobject_index();
+  inline void clear_has_gameobject_index();
+  inline void set_has_type();
+  inline void clear_has_type();
+  inline void set_has_mass();
+  inline void clear_has_mass();
+  inline void set_has_max_hp();
+  inline void clear_has_max_hp();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::int32 gameobject_index_;
+  ::google::protobuf::int32 type_;
+  float mass_;
+  float max_hp_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+
+  friend void  protobuf_AddDesc_body_2eproto();
+  friend void protobuf_AssignDesc_body_2eproto();
+  friend void protobuf_ShutdownFile_body_2eproto();
+
+  void InitAsDefaultInstance();
+  static dumbmob_info* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class dumbmob_data : public ::google::protobuf::Message {
+ public:
+  dumbmob_data();
+  virtual ~dumbmob_data();
+
+  dumbmob_data(const dumbmob_data& from);
+
+  inline dumbmob_data& operator=(const dumbmob_data& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const dumbmob_data& default_instance();
+
+  void Swap(dumbmob_data* other);
+
+  // implements Message ----------------------------------------------
+
+  dumbmob_data* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const dumbmob_data& from);
+  void MergeFrom(const dumbmob_data& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required int32 gameobject_index = 1;
+  inline bool has_gameobject_index() const;
+  inline void clear_gameobject_index();
+  static const int kGameobjectIndexFieldNumber = 1;
+  inline ::google::protobuf::int32 gameobject_index() const;
+  inline void set_gameobject_index(::google::protobuf::int32 value);
+
+  // required float angle = 2;
+  inline bool has_angle() const;
+  inline void clear_angle();
+  static const int kAngleFieldNumber = 2;
+  inline float angle() const;
+  inline void set_angle(float value);
+
+  // required float posx = 3;
+  inline bool has_posx() const;
+  inline void clear_posx();
+  static const int kPosxFieldNumber = 3;
+  inline float posx() const;
+  inline void set_posx(float value);
+
+  // required float posy = 4;
+  inline bool has_posy() const;
+  inline void clear_posy();
+  static const int kPosyFieldNumber = 4;
+  inline float posy() const;
+  inline void set_posy(float value);
+
+  // required float cur_hp = 5;
+  inline bool has_cur_hp() const;
+  inline void clear_cur_hp();
+  static const int kCurHpFieldNumber = 5;
+  inline float cur_hp() const;
+  inline void set_cur_hp(float value);
+
+  // required float velx = 6;
+  inline bool has_velx() const;
+  inline void clear_velx();
+  static const int kVelxFieldNumber = 6;
+  inline float velx() const;
+  inline void set_velx(float value);
+
+  // required float vely = 7;
+  inline bool has_vely() const;
+  inline void clear_vely();
+  static const int kVelyFieldNumber = 7;
+  inline float vely() const;
+  inline void set_vely(float value);
+
+  // @@protoc_insertion_point(class_scope:databody.dumbmob_data)
+ private:
+  inline void set_has_gameobject_index();
+  inline void clear_has_gameobject_index();
+  inline void set_has_angle();
+  inline void clear_has_angle();
+  inline void set_has_posx();
+  inline void clear_has_posx();
+  inline void set_has_posy();
+  inline void clear_has_posy();
+  inline void set_has_cur_hp();
+  inline void clear_has_cur_hp();
+  inline void set_has_velx();
+  inline void clear_has_velx();
+  inline void set_has_vely();
+  inline void clear_has_vely();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::int32 gameobject_index_;
+  float angle_;
+  float posx_;
+  float posy_;
+  float cur_hp_;
+  float velx_;
+  float vely_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
+
+  friend void  protobuf_AddDesc_body_2eproto();
+  friend void protobuf_AssignDesc_body_2eproto();
+  friend void protobuf_ShutdownFile_body_2eproto();
+
+  void InitAsDefaultInstance();
+  static dumbmob_data* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class leave_object : public ::google::protobuf::Message {
+ public:
+  leave_object();
+  virtual ~leave_object();
+
+  leave_object(const leave_object& from);
+
+  inline leave_object& operator=(const leave_object& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const leave_object& default_instance();
+
+  void Swap(leave_object* other);
+
+  // implements Message ----------------------------------------------
+
+  leave_object* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const leave_object& from);
+  void MergeFrom(const leave_object& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required int32 gameobject_index = 1;
+  inline bool has_gameobject_index() const;
+  inline void clear_gameobject_index();
+  static const int kGameobjectIndexFieldNumber = 1;
+  inline ::google::protobuf::int32 gameobject_index() const;
+  inline void set_gameobject_index(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:databody.leave_object)
+ private:
+  inline void set_has_gameobject_index();
+  inline void clear_has_gameobject_index();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::int32 gameobject_index_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_body_2eproto();
+  friend void protobuf_AssignDesc_body_2eproto();
+  friend void protobuf_ShutdownFile_body_2eproto();
+
+  void InitAsDefaultInstance();
+  static leave_object* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -1335,6 +1657,28 @@ inline void gameuser_data::set_vely(float value) {
   vely_ = value;
 }
 
+// required float swordangle = 9;
+inline bool gameuser_data::has_swordangle() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void gameuser_data::set_has_swordangle() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void gameuser_data::clear_has_swordangle() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void gameuser_data::clear_swordangle() {
+  swordangle_ = 0;
+  clear_has_swordangle();
+}
+inline float gameuser_data::swordangle() const {
+  return swordangle_;
+}
+inline void gameuser_data::set_swordangle(float value) {
+  set_has_swordangle();
+  swordangle_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // gameuser_info
@@ -1545,6 +1889,282 @@ inline float staticobject_info::posy() const {
 inline void staticobject_info::set_posy(float value) {
   set_has_posy();
   posy_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// dumbmob_info
+
+// required int32 gameobject_index = 1;
+inline bool dumbmob_info::has_gameobject_index() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void dumbmob_info::set_has_gameobject_index() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void dumbmob_info::clear_has_gameobject_index() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void dumbmob_info::clear_gameobject_index() {
+  gameobject_index_ = 0;
+  clear_has_gameobject_index();
+}
+inline ::google::protobuf::int32 dumbmob_info::gameobject_index() const {
+  return gameobject_index_;
+}
+inline void dumbmob_info::set_gameobject_index(::google::protobuf::int32 value) {
+  set_has_gameobject_index();
+  gameobject_index_ = value;
+}
+
+// required int32 type = 2;
+inline bool dumbmob_info::has_type() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void dumbmob_info::set_has_type() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void dumbmob_info::clear_has_type() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void dumbmob_info::clear_type() {
+  type_ = 0;
+  clear_has_type();
+}
+inline ::google::protobuf::int32 dumbmob_info::type() const {
+  return type_;
+}
+inline void dumbmob_info::set_type(::google::protobuf::int32 value) {
+  set_has_type();
+  type_ = value;
+}
+
+// required float mass = 3;
+inline bool dumbmob_info::has_mass() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void dumbmob_info::set_has_mass() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void dumbmob_info::clear_has_mass() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void dumbmob_info::clear_mass() {
+  mass_ = 0;
+  clear_has_mass();
+}
+inline float dumbmob_info::mass() const {
+  return mass_;
+}
+inline void dumbmob_info::set_mass(float value) {
+  set_has_mass();
+  mass_ = value;
+}
+
+// required float max_hp = 4;
+inline bool dumbmob_info::has_max_hp() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void dumbmob_info::set_has_max_hp() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void dumbmob_info::clear_has_max_hp() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void dumbmob_info::clear_max_hp() {
+  max_hp_ = 0;
+  clear_has_max_hp();
+}
+inline float dumbmob_info::max_hp() const {
+  return max_hp_;
+}
+inline void dumbmob_info::set_max_hp(float value) {
+  set_has_max_hp();
+  max_hp_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// dumbmob_data
+
+// required int32 gameobject_index = 1;
+inline bool dumbmob_data::has_gameobject_index() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void dumbmob_data::set_has_gameobject_index() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void dumbmob_data::clear_has_gameobject_index() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void dumbmob_data::clear_gameobject_index() {
+  gameobject_index_ = 0;
+  clear_has_gameobject_index();
+}
+inline ::google::protobuf::int32 dumbmob_data::gameobject_index() const {
+  return gameobject_index_;
+}
+inline void dumbmob_data::set_gameobject_index(::google::protobuf::int32 value) {
+  set_has_gameobject_index();
+  gameobject_index_ = value;
+}
+
+// required float angle = 2;
+inline bool dumbmob_data::has_angle() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void dumbmob_data::set_has_angle() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void dumbmob_data::clear_has_angle() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void dumbmob_data::clear_angle() {
+  angle_ = 0;
+  clear_has_angle();
+}
+inline float dumbmob_data::angle() const {
+  return angle_;
+}
+inline void dumbmob_data::set_angle(float value) {
+  set_has_angle();
+  angle_ = value;
+}
+
+// required float posx = 3;
+inline bool dumbmob_data::has_posx() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void dumbmob_data::set_has_posx() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void dumbmob_data::clear_has_posx() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void dumbmob_data::clear_posx() {
+  posx_ = 0;
+  clear_has_posx();
+}
+inline float dumbmob_data::posx() const {
+  return posx_;
+}
+inline void dumbmob_data::set_posx(float value) {
+  set_has_posx();
+  posx_ = value;
+}
+
+// required float posy = 4;
+inline bool dumbmob_data::has_posy() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void dumbmob_data::set_has_posy() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void dumbmob_data::clear_has_posy() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void dumbmob_data::clear_posy() {
+  posy_ = 0;
+  clear_has_posy();
+}
+inline float dumbmob_data::posy() const {
+  return posy_;
+}
+inline void dumbmob_data::set_posy(float value) {
+  set_has_posy();
+  posy_ = value;
+}
+
+// required float cur_hp = 5;
+inline bool dumbmob_data::has_cur_hp() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void dumbmob_data::set_has_cur_hp() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void dumbmob_data::clear_has_cur_hp() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void dumbmob_data::clear_cur_hp() {
+  cur_hp_ = 0;
+  clear_has_cur_hp();
+}
+inline float dumbmob_data::cur_hp() const {
+  return cur_hp_;
+}
+inline void dumbmob_data::set_cur_hp(float value) {
+  set_has_cur_hp();
+  cur_hp_ = value;
+}
+
+// required float velx = 6;
+inline bool dumbmob_data::has_velx() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void dumbmob_data::set_has_velx() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void dumbmob_data::clear_has_velx() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void dumbmob_data::clear_velx() {
+  velx_ = 0;
+  clear_has_velx();
+}
+inline float dumbmob_data::velx() const {
+  return velx_;
+}
+inline void dumbmob_data::set_velx(float value) {
+  set_has_velx();
+  velx_ = value;
+}
+
+// required float vely = 7;
+inline bool dumbmob_data::has_vely() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void dumbmob_data::set_has_vely() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void dumbmob_data::clear_has_vely() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void dumbmob_data::clear_vely() {
+  vely_ = 0;
+  clear_has_vely();
+}
+inline float dumbmob_data::vely() const {
+  return vely_;
+}
+inline void dumbmob_data::set_vely(float value) {
+  set_has_vely();
+  vely_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// leave_object
+
+// required int32 gameobject_index = 1;
+inline bool leave_object::has_gameobject_index() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void leave_object::set_has_gameobject_index() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void leave_object::clear_has_gameobject_index() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void leave_object::clear_gameobject_index() {
+  gameobject_index_ = 0;
+  clear_has_gameobject_index();
+}
+inline ::google::protobuf::int32 leave_object::gameobject_index() const {
+  return gameobject_index_;
+}
+inline void leave_object::set_gameobject_index(::google::protobuf::int32 value) {
+  set_has_gameobject_index();
+  gameobject_index_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -2005,10 +2625,6 @@ inline const EnumDescriptor* GetEnumDescriptor< ::databody::shapetype>() {
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::databody::commandtype>() {
   return ::databody::commandtype_descriptor();
-}
-template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::databody::messagetype>() {
-  return ::databody::messagetype_descriptor();
 }
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::databody::movedirectiontype>() {

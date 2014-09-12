@@ -18,7 +18,7 @@ class room
 	std::set<weakptr_user_session> m_userset;
 
 	typedef std::map<weakptr_user_session, ptr_gameobject> tgameobjectmap;
-	tgameobjectmap m_gameobjectmap;
+	tgameobjectmap m_usersessiongameobjectmap;
 
 	typedef std::map<int ,ptr_gameobject> tgameobjectindexmap;
 	tgameobjectindexmap m_gameobjectindexmap;
@@ -43,7 +43,6 @@ public:
 
 	/// Called when two fixtures cease to touch.
 	virtual void EndContact(b2Contact* contact);
-	void process_move(ptr_user_session arg_user, databody::movedirectiontype arg_type);
 	void process_gamemessage(ptr_user_session arg_user, ptr_proto_message arg_message, BYTE arg_type);
 
 	virtual void PreSolve(b2Contact* contact, const b2Manifold* oldManifold);

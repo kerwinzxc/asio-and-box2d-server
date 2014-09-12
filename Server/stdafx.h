@@ -62,6 +62,10 @@ namespace mpl = boost::mpl;
 
 #include <Box2D/Box2D.h>
 
+#include "body.pb.h"
 
+#include "packet_data.h"
+#include "packet_encoder.h"
+#include "packet_decoder.h"
 
 // TODO: 프로그램에 필요한 추가 헤더는 여기에서 참조합니다.

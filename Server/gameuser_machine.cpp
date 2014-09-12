@@ -110,6 +110,7 @@ void gameuser_machine::makepacket_gameuser_data()
 		
 		m_body->GetAngularVelocity(); // °¢¼Óµµ
 		m_data->set_state(m_StateType);
+		m_data->set_swordangle(m_swordangle);
 	}
 }
 
@@ -174,8 +175,12 @@ sc::result gameuser_idle::react(const evjump &arg_evt)
 
 sc::result gameuser_idle::react(const evskill & arg_evt)
 {
-	post_event(arg_evt);
-	return transit<gameuser_skill1>();
+	if (arg_evt.m_skilltype == skill1)
+		return transit<gameuser_skill1>();
+	else if (arg_evt.m_skilltype == skill2)
+		return transit<gameuser_skill2>();
+	else
+		return discard_event();
 }
 
 
@@ -262,20 +267,76 @@ sc::result gameuser_move::react(const evskill & arg_evt)
 }
 
 
+gameuser_skill1::gameuser_skill1()
+{
+	m_angle = 100.0f;
+	init = true;
+	loop = false;
+	end = false;
+	//context<gameuser_machine>().SetStateType(3);
+}
+
+gameuser_skill1::~gameuser_skill1()
+{
+
+}
+
 sc::result gameuser_skill1::react(const evtick &arg_evt)
 {
-	RayCastClosestCallback a;
-	b2Vec2 vec(-0.5, 0.0f);
 
-	context<gameuser_machine>().RayCast(&a, vec, m_angle);
-	if (a.m_hit == true)
-		cout << "hit  angle" << m_angle << endl;
 
-	m_angle += arg_evt.m_tick*30;
 	if (m_angle > 360.0f)
 	{
 		m_angle -= 360.0f;
 	}
+	if (init == true)
+	{
+
+		loop = true;
+		init = false;
+		return discard_event();
+	}
+	if (loop == true)
+	{
+		m_angle += arg_evt.m_tick * 200;
+
+		if (m_angle > 100.0f && m_angle < 230.0f)
+		{
+
+
+			RayCastClosestCallback a;
+			b2Vec2 vec(0.0f, 0.0f);
+
+			context<gameuser_machine>().m_swordangle = m_angle * (b2_pi / 180);
+			context<gameuser_machine>().RayCast(&a, vec, m_angle);
+			if (a.m_hit == true)
+				cout << "hit  angle" << m_angle << endl;
+
+		}
+		else
+		{
+			context<gameuser_machine>().m_swordangle = 100 * (b2_pi / 180);
+		}
+
+		if (m_angle > 300)
+		{
+			loop = false;
+			end = true;
+			
+		}
+		return discard_event();
+	}
+
+	if (end = true)
+	{
+		return transit<gameuser_idle>();
+	}
+
+
+	
+	
+	
+	
 	/*
 	m_cooltime += arg_evt.m_tick;
 
@@ -289,17 +350,6 @@ sc::result gameuser_skill1::react(const evtick &arg_evt)
 	*/
 	
 	return forward_event();
-}
-
-gameuser_skill1::gameuser_skill1()
-{
-	m_angle = 0.0f;
-	//context<gameuser_machine>().SetStateType(3);
-}
-
-gameuser_skill1::~gameuser_skill1()
-{
-
 }
 
 
@@ -388,54 +438,56 @@ sc::result gameuser_common::react(const evdeletegameobject &arg_evt)
 	return discard_event();
 }
 
-sc::result gameuser_common::react(const evpacketinfolist &arg_evt)
+sc::result gameuser_common::react(const evmakepacketdata &arg_evt)
 {
-	auto& _gameuser_machine = context<gameuser_machine>();
-	auto curitr = _gameuser_machine.m_infolist.begin();
-	while (curitr != _gameuser_machine.m_infolist.end())
-	{		
-		auto _sharedptr = curitr->lock();
-		if (_sharedptr != NULL)
-		{
-			_sharedptr->makepacket_info(arg_evt.m_packet);
-			curitr++;
-		}
-		else
-		{
-			curitr == _gameuser_machine.m_infolist.erase(curitr);
-		}
-		
-		
-	}
-
-	_gameuser_machine.m_infolist.clear();
-
-	return discard_event();
-}
-
-sc::result gameuser_common::react(const evpacketdatalist &arg_evt)
-{
-	auto& _gameuser_machine = context<gameuser_machine>();
-
-	auto curitr = context<gameuser_machine>().m_datalist.begin();
-	while (curitr != context<gameuser_machine>().m_datalist.end())
 	{
-		auto _sharedptr = curitr->lock();
-		if (_sharedptr != NULL)
-		{
-			_sharedptr->makepacket_data(arg_evt.m_packet);
-			curitr++;
+
+	
+		auto& _gameuser_machine = context<gameuser_machine>();
+		auto curitr = _gameuser_machine.m_infolist.begin();
+		while (curitr != _gameuser_machine.m_infolist.end())
+		{		
+			auto _sharedptr = curitr->first.lock();
+			if (_sharedptr != NULL)
+			{
+				_sharedptr->makepacket_info(arg_evt.m_tcppacket);
+				curitr++;
+			}
+			else
+			{
+				curitr == _gameuser_machine.m_infolist.erase(curitr);
+			}
 		}
-		else
-		{
-			curitr == _gameuser_machine.m_datalist.erase(curitr);
-		}
+
+		_gameuser_machine.m_infolist.clear();
 	}
-	arg_evt.m_packet->addmessage(_gameuser_machine.get_gameuser_data());
+
+	{
+		auto& _gameuser_machine = context<gameuser_machine>();
+
+		auto curitr = context<gameuser_machine>().m_datalist.begin();
+		while (curitr != context<gameuser_machine>().m_datalist.end())
+		{
+			auto _sharedptr = curitr->first.lock();
+			if (_sharedptr != NULL)
+			{
+				_sharedptr->makepacket_data(arg_evt.m_udppacket);
+				curitr++;
+			}
+			else
+			{
+				int index = curitr->second;
+				databody::leave_object obj;
+				obj.set_gameobject_index(index);
+				arg_evt.m_tcppacket->addmessage(&obj);
+
+				curitr == _gameuser_machine.m_datalist.erase(curitr);
+			}
+		}
+		arg_evt.m_udppacket->addmessage(_gameuser_machine.get_gameuser_data());
+	}
 	return discard_event();
 }
-
-
 
 gameuser_common::gameuser_common()
 {
