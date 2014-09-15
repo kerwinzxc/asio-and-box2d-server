@@ -73,6 +73,42 @@ typedef boost::weak_ptr < user_session > weakptr_user_session;
 typedef boost::weak_ptr < room > weakptr_room;
 typedef boost::weak_ptr < gameobject > weakptr_gameobject;
 
+struct fixturetag{
+	fixturetag(unsigned long _value)
+		: m_bitset(_value)
+	{
+		m_bitset.to_ulong();
+	}
+
+	fixturetag()
+		: m_bitset(0)
+	{
+	}
+	fixturetag(const fixturetag& _value)
+	{
+		m_bitset = _value.m_bitset;
+	}
+
+	std::bitset<32> m_bitset;
+
+	void reset()
+	{
+		m_bitset.reset();
+	}
+	bool getoption(size_t _pos)const
+	{
+		return m_bitset.test(_pos);
+	}
+	void setoption(size_t _pos,bool _value)
+	{
+		m_bitset.set(_pos, _value);
+	}
+	unsigned long getvalue()const
+	{
+		return m_bitset.to_ulong();
+	}
+	
+};
 
 #define gameobjectindextag_gameuser 1
 #define gameobjectindextag_staticobject 5001
@@ -80,16 +116,20 @@ typedef boost::weak_ptr < gameobject > weakptr_gameobject;
 
 
 
-#define FixtureTag_GameuserBody 1
-#define FixtureTag_GameuserBodyNearRader1 2 // 이레이더로 근처의 사물들을 체크 한다.
-#define FixtureTag_GameuserBodyRader2 3
-#define FixtureTag_GameuserBodyRader3 4
-#define FixtureTag_GameuserBodyRader4 5
-
-#define FixtureTag_MobBody 6
+#define FixtureTag_Body 0 // body
+#define FixtureTag_Wire 1 //
 
 
-#define FixtureTag_MapObject 100
+#define FixtureTag_SightRader 2 // body
+#define FixtureTag_AttackRader 3 // body
+
+
+
+
+#define FixtureTag_Gameuser 10
+#define FixtureTag_Mob 11
+#define FixtureTag_Npc 12
+
 
 enum packet_sendtype{ tcp , udp};
 

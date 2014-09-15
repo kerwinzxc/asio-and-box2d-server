@@ -169,100 +169,18 @@ void room::dispatch_exit(ptr_user_session arg_user, boost::function<void(ptr_roo
 	});
 }
 
-void room::BeginContact(b2Contact* contact)
+ptr_gameobject room::get_gameobject(unsigned int arg_gameobjectindex)
 {
-	unsigned int _indexgameobjectA = (unsigned int)contact->GetFixtureA()->GetBody()->GetUserData();
-	auto cura = m_gameobjectindexmap.find(_indexgameobjectA);
-	ptr_gameobject _gameobjecta;
+	auto cura = m_gameobjectindexmap.find(arg_gameobjectindex);
+	ptr_gameobject _gameobject;
 	if (cura != m_gameobjectindexmap.end())
 	{
-		_gameobjecta = cura->second;
+		_gameobject = cura->second;
 	}
-	int _fixtureA = (int)contact->GetFixtureA()->GetUserData();
-	cout << "fixtureA : " << _fixtureA << endl;
-	unsigned int _indexgameobjectB = (unsigned int)contact->GetFixtureB()->GetBody()->GetUserData();
-	auto curb = m_gameobjectindexmap.find(_indexgameobjectB);
-	ptr_gameobject _gameobjectb;
-	if (curb != m_gameobjectindexmap.end())
-	{
-		_gameobjectb = curb->second;
-	}
-	int _fixtureB = (int)contact->GetFixtureB()->GetUserData();
-	cout << "fixtureB : " << _fixtureB << endl;
-	
-
-
-	if (_fixtureA == FixtureTag_GameuserBody)
-	{
-		
-	}
-
-	if (_fixtureA == FixtureTag_GameuserBodyNearRader1)
-	{
-		if (_gameobjecta != NULL && _gameobjectb != NULL)
-		{
-			evaddgameobject evt(_gameobjectb);
-			_gameobjecta->process_event(evt);
-		}
-	}
-	if (_fixtureB == FixtureTag_GameuserBodyNearRader1)
-	{
-		if (_gameobjecta != NULL && _gameobjectb != NULL)
-		{
-			evaddgameobject evt(_gameobjecta);
-			_gameobjectb->process_event(evt);
-		}
-	}
-	//update 
+	return _gameobject;
 }
 
-void room::EndContact(b2Contact* contact)
-{
 
-	unsigned int _indexgameobjectA = (unsigned int)contact->GetFixtureA()->GetBody()->GetUserData();
-	auto cura = m_gameobjectindexmap.find(_indexgameobjectA);
-	ptr_gameobject _gameobjecta;
-	if (cura != m_gameobjectindexmap.end())
-	{
-		_gameobjecta = cura->second;
-	}
-	int _fixtureA = (int)contact->GetFixtureA()->GetUserData();
-	cout << "fixtureA : " << _fixtureA << endl;
-	unsigned int _indexgameobjectB = (unsigned int)contact->GetFixtureB()->GetBody()->GetUserData();
-	auto curb = m_gameobjectindexmap.find(_indexgameobjectB);
-	ptr_gameobject _gameobjectb;
-	if (curb != m_gameobjectindexmap.end())
-	{
-		_gameobjectb = curb->second;
-	}
-	
-	int _fixtureB = (int)contact->GetFixtureB()->GetUserData();
-	cout << "fixtureB : " << _fixtureB << endl;
-	
-
-	if (_fixtureA == FixtureTag_GameuserBody)
-	{
-
-	}
-	
-	if (_fixtureA == FixtureTag_GameuserBodyNearRader1)
-	{
-		if (_gameobjecta != NULL && _gameobjectb != NULL)
-		{
-			evdeletegameobject evt(_gameobjectb);
-			_gameobjecta->process_event(evt);
-		}
-	}
-	if (_fixtureB == FixtureTag_GameuserBodyNearRader1)
-	{
-		if (_gameobjecta != NULL && _gameobjectb != NULL)
-		{
-			evdeletegameobject evt(_gameobjecta);
-			_gameobjectb->process_event(evt);
-		}
-	}
-	//update
-}
 
 void room::process_gamemessage(ptr_user_session arg_user, ptr_proto_message arg_message, BYTE arg_type)
 {
@@ -300,9 +218,100 @@ void room::process_gamemessage(ptr_user_session arg_user, ptr_proto_message arg_
 	});
 }
 
+
+bool room::check_tagstatus(const fixturetag& arg_taga , const fixturetag& arg_tagb, size_t arg_comparea ,bool& arg_result)
+{
+	
+	if (arg_taga.getoption(arg_comparea) == true)
+	{
+		arg_result = 0;
+		return true;
+	}
+	if (arg_tagb.getoption(arg_comparea) == true)
+	{
+		arg_result = 1; // swap
+		return true;
+	}
+
+	arg_result = 0;
+	return false;
+}
+bool room::check_tagstatus(const fixturetag& arg_tag, size_t arg_compare)
+{
+	if (arg_tag.getoption(arg_compare) == true)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+
+void room::BeginContact(b2Contact* contact)
+{
+	fixturetag _taga((unsigned long)contact->GetFixtureA()->GetUserData());
+	fixturetag _tagb((unsigned long)contact->GetFixtureB()->GetUserData());
+	unsigned int _indexgameobjectA = (unsigned int)contact->GetFixtureA()->GetBody()->GetUserData();
+	unsigned int _indexgameobjectB = (unsigned int)contact->GetFixtureB()->GetBody()->GetUserData();
+
+	// check sight
+
+	bool arg_result;
+	if (check_tagstatus(_taga, _tagb, FixtureTag_SightRader, arg_result))
+	{
+		if (arg_result == true)
+		{
+			std::swap(_taga, _tagb);
+			std::swap(_indexgameobjectA, _indexgameobjectB);
+		}
+		if (check_tagstatus(_tagb, FixtureTag_Body)
+			|| check_tagstatus(_tagb, FixtureTag_Wire))
+		{
+			ptr_gameobject _obja = get_gameobject(_indexgameobjectA);
+			ptr_gameobject _objb = get_gameobject(_indexgameobjectB);
+			if (_obja != NULL && _objb != NULL)
+			{
+				evaddgameobject evt(_objb);
+				_obja->process_event(evt);
+			}
+		}
+	}
+
+}
+
+void room::EndContact(b2Contact* contact)
+{
+	fixturetag _taga((unsigned long)contact->GetFixtureA()->GetUserData());
+	fixturetag _tagb((unsigned long)contact->GetFixtureB()->GetUserData());
+	unsigned int _indexgameobjectA = (unsigned int)contact->GetFixtureA()->GetBody()->GetUserData();
+	unsigned int _indexgameobjectB = (unsigned int)contact->GetFixtureB()->GetBody()->GetUserData();
+
+	// check sight
+	bool arg_result;
+	if (check_tagstatus(_taga, _tagb, FixtureTag_SightRader, arg_result))
+	{
+		if (arg_result == true)
+		{
+			std::swap(_taga, _tagb);
+			std::swap(_indexgameobjectA, _indexgameobjectB);
+		}
+		if (check_tagstatus(_tagb, FixtureTag_Body)
+			|| check_tagstatus(_tagb, FixtureTag_Wire))
+		{
+			ptr_gameobject _obja = get_gameobject(_indexgameobjectA);
+			ptr_gameobject _objb = get_gameobject(_indexgameobjectB);
+			if (_obja != NULL && _objb != NULL)
+			{
+				evdeletegameobject evt(_objb);
+				_obja->process_event(evt);
+			}
+		}
+	}
+}
+
+
 void room::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
 {
-
 	const b2Manifold* manifold = contact->GetManifold();
 
 	if (manifold->pointCount == 0)
@@ -310,37 +319,33 @@ void room::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
 		return;
 	}
 
-	b2PointState state1[b2_maxManifoldPoints], state2[b2_maxManifoldPoints];
-	b2GetPointStates(state1, state2, oldManifold, manifold);
+	fixturetag _taga((unsigned long)contact->GetFixtureA()->GetUserData());
+	fixturetag _tagb((unsigned long)contact->GetFixtureB()->GetUserData());
+	b2Vec2 _veca = contact->GetFixtureA()->GetBody()->GetPosition();
+	b2Vec2 _vecb = contact->GetFixtureB()->GetBody()->GetPosition();
 
-	b2WorldManifold worldManifold;
-	contact->GetWorldManifold(&worldManifold);
 
-	
-	
-	b2Fixture* a =  contact->GetFixtureA();
-	b2Vec2 veca = a->GetBody()->GetPosition();
-	b2Fixture* b = contact->GetFixtureB();
-	b2Vec2 vecb = b->GetBody()->GetPosition();
-
-	int _fixtureA = (int)contact->GetFixtureA()->GetUserData();	
-	int _fixtureB = (int)contact->GetFixtureB()->GetUserData();
-
-	if (_fixtureA == FixtureTag_GameuserBody && _fixtureB == FixtureTag_MapObject
-		|| _fixtureA == FixtureTag_MapObject && _fixtureB == FixtureTag_GameuserBody)
+	bool arg_result;
+	if (check_tagstatus(_taga, _tagb, FixtureTag_Wire, arg_result))
 	{
-		if (_fixtureA == FixtureTag_MapObject)
+		if (arg_result == true)
 		{
-			std::swap(veca, vecb);			
+			swap(_taga, _tagb);
+			swap(_veca, _vecb);
 		}
-
-
-		cout << state1[0] << state1[1] << state1[0] << state1[1] << endl;
-		cout << veca.y << "       " << vecb.y << endl;
-
-		if (veca.y < worldManifold.points[0].y) // body 와 충돌포인트 높이 비교
+		if (check_tagstatus(_tagb, FixtureTag_Body))
 		{
-			contact->SetEnabled(false); // 충돌 처리를 off 할수 있다.
+			b2PointState state1[b2_maxManifoldPoints], state2[b2_maxManifoldPoints];
+			b2GetPointStates(state1, state2, oldManifold, manifold);
+
+			b2WorldManifold worldManifold;
+			contact->GetWorldManifold(&worldManifold);
+
+
+			if (_vecb.y < worldManifold.points[0].y) // body 와 충돌포인트 높이 비교
+			{
+				contact->SetEnabled(false); // 충돌 처리를 off 할수 있다.
+			}
 		}
-	}	
+	}
 }

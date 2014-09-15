@@ -45,6 +45,10 @@ public:
 	virtual void EndContact(b2Contact* contact);
 	void process_gamemessage(ptr_user_session arg_user, ptr_proto_message arg_message, BYTE arg_type);
 
+	ptr_gameobject get_gameobject(unsigned int arg_gameobjectindex);
+
 	virtual void PreSolve(b2Contact* contact, const b2Manifold* oldManifold);
+	bool check_tagstatus(const fixturetag& arg_taga, const fixturetag& arg_tagb, size_t arg_comparea, bool& arg_result);
+	bool check_tagstatus(const fixturetag& arg_tag, size_t arg_compare);
 };
 

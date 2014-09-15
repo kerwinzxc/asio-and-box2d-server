@@ -19,7 +19,11 @@ dumbmob_machine::dumbmob_machine(ptr_b2world arg_world, int arg_gameobjectindex,
 
 	b2FixtureDef fd1;
 	fd1.shape = &shape;
-	fd1.userData = (void*)(int)FixtureTag_MobBody;
+	fixturetag tag;
+	tag.setoption(FixtureTag_Body, true);
+	tag.setoption(FixtureTag_Mob, true);
+
+	fd1.userData = (void*)tag.getvalue();
 	fd1.density = 1.0f;
 	m_body->CreateFixture(&fd1);
 

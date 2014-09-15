@@ -8,6 +8,13 @@
 
 int _tmain(int argc, _TCHAR* argv[])
 {
+	cout << sizeof(bool) << endl;
+	fixturetag a(0);
+	a.setoption(1, 1);
+	
+	cout << sizeof(int) << endl;
+	cout << sizeof(fixturetag) << endl;
+	cout << a.getvalue() << endl;
 	//try
 	//{
 //	databody::join bhe;

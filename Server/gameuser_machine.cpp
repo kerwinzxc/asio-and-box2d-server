@@ -39,7 +39,12 @@ gameuser_machine::gameuser_machine( ptr_b2world arg_world, unsigned arg_gameobje
 
 	b2FixtureDef fd1;
 	fd1.shape = &shape;
-	fd1.userData = (void*)(int)FixtureTag_GameuserBody;
+
+	fixturetag tagbody;
+	tagbody.setoption(FixtureTag_Body,true);
+	tagbody.setoption(FixtureTag_Gameuser,true);
+
+	fd1.userData = (void*)tagbody.getvalue();
 	fd1.density = 1.0f;
 	m_body->CreateFixture(&fd1);
 	
@@ -53,7 +58,11 @@ gameuser_machine::gameuser_machine( ptr_b2world arg_world, unsigned arg_gameobje
 	b2FixtureDef fd;
 	fd.shape = &circleshape;
 	fd.isSensor = true;
-	fd.userData = (void*)(int)FixtureTag_GameuserBodyNearRader1;
+
+	tagbody.reset();
+	tagbody.setoption(FixtureTag_SightRader, true);
+	tagbody.setoption(FixtureTag_Gameuser, true);
+	fd.userData = (void*)tagbody.getvalue();
 	m_body->CreateFixture(&fd);
 
 	makepacket_gameuser_info();
@@ -298,7 +307,7 @@ sc::result gameuser_skill1::react(const evtick &arg_evt)
 	}
 	if (loop == true)
 	{
-		m_angle += arg_evt.m_tick * 200;
+		m_angle += arg_evt.m_tick * 250;
 
 		if (m_angle > 100.0f && m_angle < 230.0f)
 		{
@@ -318,7 +327,7 @@ sc::result gameuser_skill1::react(const evtick &arg_evt)
 			context<gameuser_machine>().m_swordangle = 100 * (b2_pi / 180);
 		}
 
-		if (m_angle > 300)
+		if (m_angle > 240)
 		{
 			loop = false;
 			end = true;

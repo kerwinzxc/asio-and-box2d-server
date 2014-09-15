@@ -20,7 +20,11 @@ staticobject_machine::staticobject_machine( ptr_b2world arg_world, unsigned int 
 
 	b2FixtureDef fd;
 	fd.shape = &chain;
-	fd.userData = (void*)(int)FixtureTag_MapObject;
+
+	fixturetag tag;
+	tag.setoption(FixtureTag_Wire, true);
+
+	fd.userData = (void*)tag.getvalue();
 
 	m_body->CreateFixture(&fd);
 

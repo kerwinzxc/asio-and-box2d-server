@@ -17,6 +17,7 @@
 #include <deque>
 #include <set>
 #include <atomic>
+#include <bitset>
 
 #include <tbb\concurrent_queue.h>
 #include <tbb\concurrent_hash_map.h>
