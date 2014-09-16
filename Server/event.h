@@ -2,16 +2,15 @@
 #include "body.pb.h"
 
 
-
-
-
-namespace sc = boost::statechart;
-
 enum skilltype{ skill1, skill2 };
 struct evtick : sc::event < evtick >
 {
-	evtick(float arg_tick) :m_tick(arg_tick){}
+	evtick(float arg_tick,bool* arg_destory)
+		:m_tick(arg_tick)
+		, m_destory(arg_destory)
+	{}
 	float m_tick;
+	bool* m_destory;
 };
 
 struct evmove : sc::event < evmove > {
@@ -62,6 +61,16 @@ struct evdeletegameobject : sc::event < evdeletegameobject >
 	ptr_gameobject m_gameobject;
 	evdeletegameobject(ptr_gameobject arg_gameobject)
 		:m_gameobject(arg_gameobject)
+	{
+
+	}
+};
+
+struct evhit : sc::event< evhit >
+{
+	float m_dameage;
+	evhit(float arg_dameage)
+		: m_dameage(arg_dameage)
 	{
 
 	}

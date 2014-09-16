@@ -73,18 +73,26 @@ void room::update()
 	m_pretime = m_timer.expires_at();
 	m_timer.expires_at(m_timer.expires_at() + boost::posix_time::milliseconds(66));
 	m_timer.async_wait(m_strand.wrap(boost::bind(&room::update, shared_from_this())));
-	m_world->Step(_seconds, 10, 10);
+	m_world->Step(_seconds, 10, 10); // contactbegin contactend , presolve
 
 
 	auto _indexcur = m_gameobjectindexmap.begin();
 	while (_indexcur != m_gameobjectindexmap.end())
 	{
+		bool destory = false;
+		evtick _evttick(_seconds, &destory);
 		evmakedata evt;
-		evtick _evttick(_seconds);
 
 		_indexcur->second->process_event(_evttick); // tick
 		_indexcur->second->process_event(evt); // make data
-		_indexcur++;
+		if (destory == true)
+		{
+			_indexcur = m_gameobjectindexmap.erase(_indexcur);
+		}
+		else
+		{
+			_indexcur++;
+		}
 		
 	}
 
@@ -129,7 +137,7 @@ void room::dispatch_join(ptr_user_session arg_user, boost::function<void(ptr_roo
 	m_strand.dispatch([&, arg_user, arg_roomprovider_handler, arg_user_handler](){
 		m_userset.insert(arg_user);
 
-		ptr_gameobject obj = boost::make_shared<gameuser>(m_world,m_makeindex);
+		ptr_gameobject obj = boost::make_shared<gameuser>(shared_from_this(),m_world,m_makeindex);
 
 		obj->initiate();
 

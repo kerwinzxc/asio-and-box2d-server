@@ -29,6 +29,8 @@ public:
 	float m_maxplayerhp;
 	float m_swordangle;
 
+	databody::movedirectiontype m_directiontype;
+
 	unsigned int m_gameobjectindex;
 	gameobject* m_gameobject;
 
@@ -37,6 +39,7 @@ public:
 
 	b2Body* m_body;
 	ptr_b2world m_world;
+	weakptr_room m_room;
 
 	databody::gameuser_info* m_info;
 	databody::gameuser_data* m_data;
@@ -48,7 +51,7 @@ public:
 	map<weakptr_gameobject,int> m_datalist;
 
 
-	gameuser_machine( ptr_b2world arg_world, unsigned arg_gameobjectindex);
+	gameuser_machine(weakptr_room arg_room, ptr_b2world arg_world, unsigned arg_gameobjectindex);
 	~gameuser_machine();
 
 	void makepacket_gameuser_info();
@@ -69,7 +72,7 @@ public:
 
 	void SetStateType(int val) { m_StateType = val; }
 
-	void RayCast(raycastcallback* callback, const b2Vec2& point1, const float& angle) const;
+	void raycast(raycastcallback* callback, const float& angle, const float& arg_length) const;
 	
 };
 
@@ -79,10 +82,12 @@ public :
 	ptr_gameuser_machine m_machine;
 	ptr_b2world m_world;
 	ptr_makeindex m_makeindex;
+	bool isprocess = false;
+	weakptr_room m_room;
 
-
-	gameuser(ptr_b2world arg_world, ptr_makeindex arg_makeindex)
-		: m_world(arg_world)
+	gameuser(weakptr_room arg_room,ptr_b2world arg_world, ptr_makeindex arg_makeindex)
+		: m_room(arg_room)
+		, m_world(arg_world)
 		, m_makeindex(arg_makeindex)
 		, gameobject(arg_makeindex)
 	{
@@ -91,13 +96,22 @@ public :
 
 	virtual void initiate()
 	{
-		m_machine = boost::make_shared<gameuser_machine>( m_world, m_gameobjectindex);
+		m_machine = boost::make_shared<gameuser_machine>(m_room, m_world, m_gameobjectindex);
 		m_machine->initiate();
 	}
 
 	virtual void process_event(const sc::event_base & evt)
-	{
-		m_machine->process_event(evt);
+	{		
+		if (isprocess == false)
+		{
+			isprocess = true;
+			m_machine->process_event(evt);
+		}
+		else if (isprocess == true)
+		{
+			m_machine->post_event_impl(evt);
+		}
+		isprocess = false;
 	}
 	
 	virtual void makepacket_info(packet_encoder* packet)
@@ -205,6 +219,7 @@ class gameuser_skill1 : public sc::simple_state<gameuser_skill1, gameuser_live::
 	bool init;
 	bool loop;
 	bool end;
+	bool hit;
 
 public:
 	gameuser_skill1();
@@ -241,8 +256,10 @@ public:
 	gameuser_condition();
 	~gameuser_condition();
 
-	typedef mpl::list< sc::custom_reaction<evtick> > reactions;
+	typedef mpl::list< sc::custom_reaction<evtick>
+	,sc::custom_reaction<evhit> > reactions;
 	sc::result react(const evtick &arg_evt);
+	sc::result react(const evhit &arg_evt);
 private:
 	
 

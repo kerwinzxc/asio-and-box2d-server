@@ -3,19 +3,21 @@
 #include "util_makeindex.h"
 #include "body.pb.h"
 #include "packet_encoder.h"
+#include "room.h"
 
 
 
-gameuser_machine::gameuser_machine( ptr_b2world arg_world, unsigned arg_gameobjectindex)
-	:m_world(arg_world)
+gameuser_machine::gameuser_machine(weakptr_room arg_room, ptr_b2world arg_world, unsigned arg_gameobjectindex)
+	:m_room(arg_room)
+	,m_world(arg_world)
 	,m_gameobjectindex(arg_gameobjectindex)
 	,m_info(NULL)
 	,m_data(NULL)
 {
 	m_skillcooltime[0] = 1.0f;
 	m_skillcooltime[1] = 1.0f;
-	m_revivedtime = 1.9f;
-	m_maxplayerhp = 100;
+	m_revivedtime = 10.0f;
+	m_maxplayerhp = 100.0f;
 	m_curplayerhp = m_maxplayerhp;
 
 	b2Vec2 x(-7.0f, 0.75f);
@@ -68,6 +70,10 @@ gameuser_machine::gameuser_machine( ptr_b2world arg_world, unsigned arg_gameobje
 	makepacket_gameuser_info();
 	m_StateType = 0;
 
+	m_swordangle = 100 * (b2_pi / 180);
+
+	m_directiontype = databody::movedirectiontype::_right;
+
 }
 
 
@@ -119,7 +125,13 @@ void gameuser_machine::makepacket_gameuser_data()
 		
 		m_body->GetAngularVelocity(); // °¢¼Óµµ
 		m_data->set_state(m_StateType);
-		m_data->set_swordangle(m_swordangle);
+
+		float angle = m_swordangle;
+		if (context<gameuser_machine>().m_directiontype == databody::movedirectiontype::_right)
+		{
+			angle = b2_pi - m_swordangle;
+		}
+		m_data->set_swordangle(angle);
 	}
 }
 
@@ -133,12 +145,17 @@ databody::gameuser_data* gameuser_machine::get_gameuser_data() const
 	return m_data;
 }
 
-void gameuser_machine::RayCast(raycastcallback* callback, const b2Vec2& point, const float& angle) const
+void gameuser_machine::raycast(raycastcallback* callback, const float& angle, const float& arg_length) const
 {
-	float32 L = 2.0f;
+	float _angle = angle;
+	if (context<gameuser_machine>().m_directiontype == databody::movedirectiontype::_right)
+	{
+		_angle = 180 - angle;
+	}
+
+	float32 L = arg_length;
 	b2Vec2 point1 = m_body->GetPosition();
-	point1 += point;
-	b2Vec2 d(L * cosf(angle * (b2_pi / 180)), L * sinf(angle * (b2_pi / 180)));
+	b2Vec2 d(L * cosf(_angle * (b2_pi / 180)), L * sinf(_angle * (b2_pi / 180)));
 	b2Vec2 point2 = point1 + d;
 	callback->m_ignorebody;
 	m_world->RayCast(callback, point1, point2);
@@ -146,7 +163,7 @@ void gameuser_machine::RayCast(raycastcallback* callback, const b2Vec2& point, c
 
 gameuser_live::gameuser_live()
 {
-
+	
 }
 
 gameuser_live::~gameuser_live()
@@ -220,6 +237,8 @@ sc::result gameuser_move::react(const evtick &arg_evt)
 		{
 			context<gameuser_machine>().m_body->SetLinearVelocity(b2Vec2(-5.0f, lv.y));
 		}
+
+		context<gameuser_machine>().m_directiontype = databody::movedirectiontype::_left;
 		
 	}
 	else if (m_evmove.m_type == databody::movedirectiontype::_right)
@@ -233,6 +252,7 @@ sc::result gameuser_move::react(const evtick &arg_evt)
 		{
 			context<gameuser_machine>().m_body->SetLinearVelocity(b2Vec2(5.0f, lv.y));
 		}
+		context<gameuser_machine>().m_directiontype = databody::movedirectiontype::_right;
 	}
 	else if (m_evmove.m_type == databody::movedirectiontype::_end
 		|| m_evmove.m_type == databody::movedirectiontype::_none)
@@ -282,6 +302,7 @@ gameuser_skill1::gameuser_skill1()
 	init = true;
 	loop = false;
 	end = false;
+	hit = false;
 	//context<gameuser_machine>().SetStateType(3);
 }
 
@@ -311,16 +332,22 @@ sc::result gameuser_skill1::react(const evtick &arg_evt)
 
 		if (m_angle > 100.0f && m_angle < 230.0f)
 		{
-
-
-			RayCastClosestCallback a;
-			b2Vec2 vec(0.0f, 0.0f);
+			
 
 			context<gameuser_machine>().m_swordangle = m_angle * (b2_pi / 180);
-			context<gameuser_machine>().RayCast(&a, vec, m_angle);
-			if (a.m_hit == true)
-				cout << "hit  angle" << m_angle << endl;
-
+			if (hit == false)
+			{
+				RayCastClosestCallback a;
+				context<gameuser_machine>().raycast(&a, m_angle,2.0f);
+				if (a.m_hit == true)
+				{
+					hit = true;
+					auto _room = context<gameuser_machine>().m_room.lock();
+					auto _gameobject = _room->get_gameobject((unsigned int)a.m_body->GetUserData());
+					evhit evt(10);
+					_gameobject->process_event(evt);
+				}
+			}
 		}
 		else
 		{
@@ -393,8 +420,10 @@ gameuser_dead::~gameuser_dead()
 sc::result gameuser_dead::react(const evtick &arg_evt)
 {
 	m_cooltime += arg_evt.m_tick;
+
 	if (m_cooltime > context<gameuser_machine>().m_revivedtime)
 	{
+		context<gameuser_machine>().m_curplayerhp = context<gameuser_machine>().m_maxplayerhp;
 		return transit< gameuser_live >();
 	}
 	
@@ -414,13 +443,19 @@ gameuser_condition::~gameuser_condition()
 
 sc::result gameuser_condition::react(const evtick &arg_evt)
 {
-	context<gameuser_machine>().m_curplayerhp -= arg_evt.m_tick;
+	//context<gameuser_machine>().m_curplayerhp -= arg_evt.m_tick;
 
-	if (context<gameuser_machine>().m_curplayerhp < 0)
+	if (context<gameuser_machine>().m_curplayerhp <= 0)
 	{
 		return transit<gameuser_dead>();
 	}
 	
+	return forward_event();
+}
+
+sc::result gameuser_condition::react(const evhit &arg_evt)
+{
+	context<gameuser_machine>().m_curplayerhp -= arg_evt.m_dameage;
 	return forward_event();
 }
 
@@ -464,7 +499,7 @@ sc::result gameuser_common::react(const evmakepacketdata &arg_evt)
 			}
 			else
 			{
-				curitr == _gameuser_machine.m_infolist.erase(curitr);
+				curitr = _gameuser_machine.m_infolist.erase(curitr);
 			}
 		}
 
@@ -490,7 +525,7 @@ sc::result gameuser_common::react(const evmakepacketdata &arg_evt)
 				obj.set_gameobject_index(index);
 				arg_evt.m_tcppacket->addmessage(&obj);
 
-				curitr == _gameuser_machine.m_datalist.erase(curitr);
+				curitr = _gameuser_machine.m_datalist.erase(curitr);
 			}
 		}
 		arg_evt.m_udppacket->addmessage(_gameuser_machine.get_gameuser_data());

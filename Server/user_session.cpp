@@ -130,14 +130,23 @@ void user_session::do_sendpacket()
 
 void user_session::session_end()
 {	
-	user_session_manager::getInst().delete_user(m_uuid);
-	m_socket.close();
-	m_timer.cancel();
-
-	if (m_room != NULL)
+	auto self(shared_from_this());
+	m_strand.dispatch([&, this, self]()
 	{
-		m_room_provider->exit_room(shared_from_this(), m_room,bind(&user_session::handle_exit,shared_from_this()));
-	}
+		user_session_manager::getInst().delete_user(m_uuid);
+		if (m_socket.is_open() == true)
+		{
+			m_socket.close();
+			cout << "end" << endl;
+		}
+
+		m_timer.cancel();
+
+		if (m_room != NULL)
+		{
+			m_room_provider->exit_room(shared_from_this(), m_room, bind(&user_session::handle_exit, shared_from_this()));
+		}
+	});
 }
 
 void user_session::handle_join(ptr_room arg_room)

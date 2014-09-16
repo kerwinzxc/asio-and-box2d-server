@@ -25,7 +25,11 @@ dumbmob_machine::dumbmob_machine(ptr_b2world arg_world, int arg_gameobjectindex,
 
 	fd1.userData = (void*)tag.getvalue();
 	fd1.density = 1.0f;
+	fd1.friction = 1.0f;
 	m_body->CreateFixture(&fd1);
+
+	m_maxhp = 100.0f;
+	m_curhp = m_maxhp;
 
 
 	make_info();
@@ -34,6 +38,9 @@ dumbmob_machine::dumbmob_machine(ptr_b2world arg_world, int arg_gameobjectindex,
 
 dumbmob_machine::~dumbmob_machine()
 {
+	m_world->DestroyBody(m_body);
+	delete m_data;
+	delete m_info;
 }
 
 void dumbmob_machine::make_info()
@@ -62,8 +69,6 @@ void dumbmob_machine::make_data()
 		b2Vec2 vel = m_body->GetLinearVelocity();
 		m_data->set_velx(vel.x);
 		m_data->set_vely(vel.y);
-
-		cout << pos.x << " " << pos.y << endl;
 	}
 }
 void dumbmob_machine::delete_data()
@@ -75,8 +80,27 @@ void dumbmob_machine::delete_data()
 	}
 }
 
+bool dumbmob_machine::checkdestory()
+{
+	if (m_curhp <= 0.0f)
+	{
+		return true;
+	}
+	return false;
+}
+
+void dumbmob_machine::onhit(float arg_dameage)
+{
+	m_body->ApplyForceToCenter(b2Vec2(0, arg_dameage*2), true);
+	m_curhp -= arg_dameage;
+}
+
 sc::result dumbmob_common::react(const evtick &arg_evt)
 {
+	if (context<dumbmob_machine>().checkdestory() == true)
+	{
+		(*arg_evt.m_destory) = true;
+	}
 	context<dumbmob_machine>().delete_data();
 	return discard_event();
 }
@@ -84,5 +108,11 @@ sc::result dumbmob_common::react(const evtick &arg_evt)
 sc::result dumbmob_common::react(const evmakedata &arg_evt)
 {
 	context<dumbmob_machine>().make_data();
+	return discard_event();
+}
+
+sc::result dumbmob_common::react(const evhit& arg_evt)
+{
+	context<dumbmob_machine>().onhit(arg_evt.m_dameage);
 	return discard_event();
 }

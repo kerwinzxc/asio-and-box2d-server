@@ -15,12 +15,12 @@ class room
 	boost::asio::time_traits<boost::posix_time::ptime>::time_type m_pretime;
 
 
-	std::set<weakptr_user_session> m_userset;
+	set<weakptr_user_session> m_userset;
 
-	typedef std::map<weakptr_user_session, ptr_gameobject> tgameobjectmap;
+	typedef map<weakptr_user_session, ptr_gameobject> tgameobjectmap;
 	tgameobjectmap m_usersessiongameobjectmap;
 
-	typedef std::map<int ,ptr_gameobject> tgameobjectindexmap;
+	typedef map<int ,ptr_gameobject> tgameobjectindexmap;
 	tgameobjectindexmap m_gameobjectindexmap;
 
 	

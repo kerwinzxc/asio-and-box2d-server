@@ -25,6 +25,7 @@ staticobject_machine::staticobject_machine( ptr_b2world arg_world, unsigned int 
 	tag.setoption(FixtureTag_Wire, true);
 
 	fd.userData = (void*)tag.getvalue();
+	fd.friction = 1.0f;
 
 	m_body->CreateFixture(&fd);
 

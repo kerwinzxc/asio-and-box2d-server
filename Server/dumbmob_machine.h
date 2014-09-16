@@ -25,7 +25,10 @@ public:
 	databody::dumbmob_data* get_data() const { return m_data; }
 	void delete_data();
 	void make_data();
-	
+
+	void onhit(float arg_dameage);
+	bool checkdestory();
+
 };
 
 
@@ -72,8 +75,10 @@ class dumbmob_common : public sc::simple_state < dumbmob_common, dumbmob_machine
 {
 public:
 	typedef mpl::list < sc::custom_reaction < evtick >
-		, sc::custom_reaction<evmakedata> > reactions;
+		, sc::custom_reaction<evmakedata>
+		, sc::custom_reaction<evhit>> reactions;
 
 	sc::result react(const evtick &arg_evt);
 	sc::result react(const evmakedata &arg_evt);
+	sc::result react(const evhit& arg_evt);
 };
