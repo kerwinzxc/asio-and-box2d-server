@@ -57,6 +57,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* skill1_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   skill1_reflection_ = NULL;
+const ::google::protobuf::Descriptor* action_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  action_reflection_ = NULL;
 const ::google::protobuf::Descriptor* commandresult_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   commandresult_reflection_ = NULL;
@@ -97,10 +100,11 @@ void protobuf_AssignDesc_body_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(gameuser_data));
   gameuser_info_descriptor_ = file->message_type(1);
-  static const int gameuser_info_offsets_[3] = {
+  static const int gameuser_info_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(gameuser_info, gameobject_index_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(gameuser_info, max_hp_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(gameuser_info, mass_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(gameuser_info, control_),
   };
   gameuser_info_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -279,7 +283,22 @@ void protobuf_AssignDesc_body_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(skill1));
-  commandresult_descriptor_ = file->message_type(12);
+  action_descriptor_ = file->message_type(12);
+  static const int action_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(action, flag_),
+  };
+  action_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      action_descriptor_,
+      action::default_instance_,
+      action_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(action, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(action, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(action));
+  commandresult_descriptor_ = file->message_type(13);
   static const int commandresult_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(commandresult, command_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(commandresult, result_),
@@ -335,6 +354,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     skill1_descriptor_, &skill1::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    action_descriptor_, &action::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     commandresult_descriptor_, &commandresult::default_instance());
 }
 
@@ -365,6 +386,8 @@ void protobuf_ShutdownFile_body_2eproto() {
   delete jump_reflection_;
   delete skill1::default_instance_;
   delete skill1_reflection_;
+  delete action::default_instance_;
+  delete action_reflection_;
   delete commandresult::default_instance_;
   delete commandresult_reflection_;
 }
@@ -380,31 +403,32 @@ void protobuf_AddDesc_body_2eproto() {
     "\022\030\n\020gameobject_index\030\001 \002(\005\022\r\n\005angle\030\002 \002("
     "\002\022\014\n\004posx\030\003 \002(\002\022\014\n\004posy\030\004 \002(\002\022\016\n\006cur_hp\030"
     "\005 \002(\002\022\r\n\005state\030\006 \002(\005\022\014\n\004velx\030\007 \002(\002\022\014\n\004ve"
-    "ly\030\010 \002(\002\022\022\n\nswordangle\030\t \002(\002\"G\n\rgameuser"
+    "ly\030\010 \002(\002\022\022\n\nswordangle\030\t \002(\002\"X\n\rgameuser"
     "_info\022\030\n\020gameobject_index\030\001 \002(\005\022\016\n\006max_h"
-    "p\030\002 \002(\002\022\014\n\004mass\030\003 \002(\002\"n\n\021staticobject_in"
-    "fo\022\030\n\020gameobject_index\030\001 \002(\005\022\t\n\001x\030\002 \003(\002\022"
-    "\t\n\001y\030\003 \003(\002\022\r\n\005angle\030\004 \002(\002\022\014\n\004posx\030\005 \002(\002\022"
-    "\014\n\004posy\030\006 \002(\002\"T\n\014dumbmob_info\022\030\n\020gameobj"
-    "ect_index\030\001 \002(\005\022\014\n\004type\030\002 \002(\005\022\014\n\004mass\030\003 "
-    "\002(\002\022\016\n\006max_hp\030\004 \002(\002\"\177\n\014dumbmob_data\022\030\n\020g"
-    "ameobject_index\030\001 \002(\005\022\r\n\005angle\030\002 \002(\002\022\014\n\004"
-    "posx\030\003 \002(\002\022\014\n\004posy\030\004 \002(\002\022\016\n\006cur_hp\030\005 \002(\002"
-    "\022\014\n\004velx\030\006 \002(\002\022\014\n\004vely\030\007 \002(\002\"(\n\014leave_ob"
-    "ject\022\030\n\020gameobject_index\030\001 \002(\005\":\n\005login\022"
-    "\021\n\tloginstep\030\001 \002(\005\022\020\n\010deviceid\030\002 \001(\t\022\014\n\004"
-    "uuid\030\003 \001(\t\"\030\n\004join\022\020\n\010deviceid\030\001 \002(\t\"\030\n\004"
-    "exit\022\020\n\010deviceid\030\001 \002(\t\"6\n\004move\022.\n\tdirect"
-    "ion\030\001 \002(\0162\033.databody.movedirectiontype\"\024"
-    "\n\004jump\022\014\n\004flag\030\001 \002(\010\"\026\n\006skill1\022\014\n\004flag\030\001"
-    " \002(\010\"G\n\rcommandresult\022&\n\007command\030\001 \002(\0162\025"
-    ".databody.commandtype\022\016\n\006result\030\002 \002(\010*.\n"
-    "\tshapetype\022\n\n\006ground\020\000\022\007\n\003box\020\001\022\014\n\010gameu"
-    "ser\020\002*b\n\013commandtype\022\r\n\tlogintype\020\000\022\014\n\010j"
-    "ointype\020\001\022\014\n\010exittype\020\002\022\014\n\010movetype\020\003\022\014\n"
-    "\010jumptype\020\004\022\014\n\010firetype\020\005*\?\n\021movedirecti"
-    "ontype\022\t\n\005_none\020\000\022\t\n\005_left\020\001\022\n\n\006_right\020\002"
-    "\022\010\n\004_end\020\003", 1130);
+    "p\030\002 \002(\002\022\014\n\004mass\030\003 \002(\002\022\017\n\007control\030\004 \002(\010\"n"
+    "\n\021staticobject_info\022\030\n\020gameobject_index\030"
+    "\001 \002(\005\022\t\n\001x\030\002 \003(\002\022\t\n\001y\030\003 \003(\002\022\r\n\005angle\030\004 \002"
+    "(\002\022\014\n\004posx\030\005 \002(\002\022\014\n\004posy\030\006 \002(\002\"T\n\014dumbmo"
+    "b_info\022\030\n\020gameobject_index\030\001 \002(\005\022\014\n\004type"
+    "\030\002 \002(\005\022\014\n\004mass\030\003 \002(\002\022\016\n\006max_hp\030\004 \002(\002\"\177\n\014"
+    "dumbmob_data\022\030\n\020gameobject_index\030\001 \002(\005\022\r"
+    "\n\005angle\030\002 \002(\002\022\014\n\004posx\030\003 \002(\002\022\014\n\004posy\030\004 \002("
+    "\002\022\016\n\006cur_hp\030\005 \002(\002\022\014\n\004velx\030\006 \002(\002\022\014\n\004vely\030"
+    "\007 \002(\002\"(\n\014leave_object\022\030\n\020gameobject_inde"
+    "x\030\001 \002(\005\":\n\005login\022\021\n\tloginstep\030\001 \002(\005\022\020\n\010d"
+    "eviceid\030\002 \001(\t\022\014\n\004uuid\030\003 \001(\t\"\030\n\004join\022\020\n\010d"
+    "eviceid\030\001 \002(\t\"\030\n\004exit\022\020\n\010deviceid\030\001 \002(\t\""
+    "6\n\004move\022.\n\tdirection\030\001 \002(\0162\033.databody.mo"
+    "vedirectiontype\"\024\n\004jump\022\014\n\004flag\030\001 \002(\010\"\026\n"
+    "\006skill1\022\014\n\004flag\030\001 \002(\010\"\026\n\006action\022\014\n\004flag\030"
+    "\001 \002(\010\"G\n\rcommandresult\022&\n\007command\030\001 \002(\0162"
+    "\025.databody.commandtype\022\016\n\006result\030\002 \002(\010*."
+    "\n\tshapetype\022\n\n\006ground\020\000\022\007\n\003box\020\001\022\014\n\010game"
+    "user\020\002*b\n\013commandtype\022\r\n\tlogintype\020\000\022\014\n\010"
+    "jointype\020\001\022\014\n\010exittype\020\002\022\014\n\010movetype\020\003\022\014"
+    "\n\010jumptype\020\004\022\014\n\010firetype\020\005*\?\n\021movedirect"
+    "iontype\022\t\n\005_none\020\000\022\t\n\005_left\020\001\022\n\n\006_right\020"
+    "\002\022\010\n\004_end\020\003", 1171);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "body.proto", &protobuf_RegisterTypes);
   gameuser_data::default_instance_ = new gameuser_data();
@@ -419,6 +443,7 @@ void protobuf_AddDesc_body_2eproto() {
   move::default_instance_ = new move();
   jump::default_instance_ = new jump();
   skill1::default_instance_ = new skill1();
+  action::default_instance_ = new action();
   commandresult::default_instance_ = new commandresult();
   gameuser_data::default_instance_->InitAsDefaultInstance();
   gameuser_info::default_instance_->InitAsDefaultInstance();
@@ -432,6 +457,7 @@ void protobuf_AddDesc_body_2eproto() {
   move::default_instance_->InitAsDefaultInstance();
   jump::default_instance_->InitAsDefaultInstance();
   skill1::default_instance_->InitAsDefaultInstance();
+  action::default_instance_->InitAsDefaultInstance();
   commandresult::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_body_2eproto);
 }
@@ -1019,6 +1045,7 @@ void gameuser_data::Swap(gameuser_data* other) {
 const int gameuser_info::kGameobjectIndexFieldNumber;
 const int gameuser_info::kMaxHpFieldNumber;
 const int gameuser_info::kMassFieldNumber;
+const int gameuser_info::kControlFieldNumber;
 #endif  // !_MSC_VER
 
 gameuser_info::gameuser_info()
@@ -1040,6 +1067,7 @@ void gameuser_info::SharedCtor() {
   gameobject_index_ = 0;
   max_hp_ = 0;
   mass_ = 0;
+  control_ = false;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1078,6 +1106,7 @@ void gameuser_info::Clear() {
     gameobject_index_ = 0;
     max_hp_ = 0;
     mass_ = 0;
+    control_ = false;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -1132,6 +1161,22 @@ bool gameuser_info::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(32)) goto parse_control;
+        break;
+      }
+
+      // required bool control = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_control:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &control_)));
+          set_has_control();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -1169,6 +1214,11 @@ void gameuser_info::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteFloat(3, this->mass(), output);
   }
 
+  // required bool control = 4;
+  if (has_control()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(4, this->control(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1190,6 +1240,11 @@ void gameuser_info::SerializeWithCachedSizes(
   // required float mass = 3;
   if (has_mass()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(3, this->mass(), target);
+  }
+
+  // required bool control = 4;
+  if (has_control()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(4, this->control(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1218,6 +1273,11 @@ int gameuser_info::ByteSize() const {
     // required float mass = 3;
     if (has_mass()) {
       total_size += 1 + 4;
+    }
+
+    // required bool control = 4;
+    if (has_control()) {
+      total_size += 1 + 1;
     }
 
   }
@@ -1256,6 +1316,9 @@ void gameuser_info::MergeFrom(const gameuser_info& from) {
     if (from.has_mass()) {
       set_mass(from.mass());
     }
+    if (from.has_control()) {
+      set_control(from.control());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -1273,7 +1336,7 @@ void gameuser_info::CopyFrom(const gameuser_info& from) {
 }
 
 bool gameuser_info::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000007) != 0x00000007) return false;
+  if ((_has_bits_[0] & 0x0000000f) != 0x0000000f) return false;
 
   return true;
 }
@@ -1283,6 +1346,7 @@ void gameuser_info::Swap(gameuser_info* other) {
     std::swap(gameobject_index_, other->gameobject_index_);
     std::swap(max_hp_, other->max_hp_);
     std::swap(mass_, other->mass_);
+    std::swap(control_, other->control_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -4082,6 +4146,213 @@ void skill1::Swap(skill1* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = skill1_descriptor_;
   metadata.reflection = skill1_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int action::kFlagFieldNumber;
+#endif  // !_MSC_VER
+
+action::action()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void action::InitAsDefaultInstance() {
+}
+
+action::action(const action& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void action::SharedCtor() {
+  _cached_size_ = 0;
+  flag_ = false;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+action::~action() {
+  SharedDtor();
+}
+
+void action::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void action::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* action::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return action_descriptor_;
+}
+
+const action& action::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_body_2eproto();
+  return *default_instance_;
+}
+
+action* action::default_instance_ = NULL;
+
+action* action::New() const {
+  return new action;
+}
+
+void action::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    flag_ = false;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool action::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required bool flag = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &flag_)));
+          set_has_flag();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void action::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // required bool flag = 1;
+  if (has_flag()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(1, this->flag(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* action::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // required bool flag = 1;
+  if (has_flag()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(1, this->flag(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int action::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required bool flag = 1;
+    if (has_flag()) {
+      total_size += 1 + 1;
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void action::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const action* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const action*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void action::MergeFrom(const action& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_flag()) {
+      set_flag(from.flag());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void action::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void action::CopyFrom(const action& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool action::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+
+  return true;
+}
+
+void action::Swap(action* other) {
+  if (other != this) {
+    std::swap(flag_, other->flag_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata action::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = action_descriptor_;
+  metadata.reflection = action_reflection_;
   return metadata;
 }
 

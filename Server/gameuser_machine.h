@@ -76,32 +76,32 @@ public:
 	
 };
 
-class gameuser : public gameobject, public boost::enable_shared_from_this<gameuser>
+class gameuser : public gameobject, public boost::enable_shared_from_this < gameuser >
 {
-public :
+public:
 	ptr_gameuser_machine m_machine;
 	ptr_b2world m_world;
 	ptr_makeindex m_makeindex;
 	bool isprocess = false;
 	weakptr_room m_room;
 
-	gameuser(weakptr_room arg_room,ptr_b2world arg_world, ptr_makeindex arg_makeindex)
+	gameuser(weakptr_room arg_room, ptr_b2world arg_world, ptr_makeindex arg_makeindex)
 		: m_room(arg_room)
 		, m_world(arg_world)
 		, m_makeindex(arg_makeindex)
 		, gameobject(arg_makeindex)
 	{
-		
+		m_machine = boost::make_shared<gameuser_machine>(m_room, m_world, m_gameobjectindex);
 	}
 
 	virtual void initiate()
 	{
-		m_machine = boost::make_shared<gameuser_machine>(m_room, m_world, m_gameobjectindex);
+		
 		m_machine->initiate();
 	}
 
 	virtual void process_event(const sc::event_base & evt)
-	{		
+	{
 		if (isprocess == false)
 		{
 			isprocess = true;
@@ -113,10 +113,16 @@ public :
 		}
 		isprocess = false;
 	}
-	
-	virtual void makepacket_info(packet_encoder* packet)
+
+	virtual void post_event(const sc::event_base & evt)
+	{
+		m_machine->post_event_impl(evt);
+	}
+
+	virtual void makepacket_info(packet_encoder* packet, bool control)
 	{
 		auto _ptr = m_machine->get_gameuser_info();
+		_ptr->set_control(control);
 		if (_ptr != NULL)
 		{
 			packet->addmessage(_ptr);
@@ -145,7 +151,8 @@ public:
 		, sc::custom_reaction<evmakedata>
 		, sc::custom_reaction<evtick>
 		, sc::custom_reaction<evaddgameobject>
-		, sc::custom_reaction<evdeletegameobject>> reactions;
+		, sc::custom_reaction<evdeletegameobject>
+		, sc::custom_reaction<evforcemove> > reactions;
 
 
 
@@ -154,6 +161,7 @@ public:
 	sc::result react(const evmakedata &arg_evt);
 	sc::result react(const evaddgameobject &arg_evt);
 	sc::result react(const evdeletegameobject &arg_evt);
+	sc::result react(const evforcemove &arg_evt);
 
 };
 

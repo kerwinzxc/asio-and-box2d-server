@@ -174,6 +174,7 @@
     <ClInclude Include="packet_decoder.h" />
     <ClInclude Include="packet_encoder.h" />
     <ClInclude Include="packet_data.h" />
+    <ClInclude Include="potal_machine.h" />
     <ClInclude Include="Raycast.h" />
     <ClInclude Include="room.h" />
     <ClInclude Include="room_provider.h" />
@@ -196,6 +197,7 @@
     <ClCompile Include="packet_decoder.cpp" />
     <ClCompile Include="packet_encoder.cpp" />
     <ClCompile Include="packet_data.cpp" />
+    <ClCompile Include="potal_machine.cpp" />
     <ClCompile Include="room.cpp" />
     <ClCompile Include="room_provider.cpp" />
     <ClCompile Include="server.cpp" />

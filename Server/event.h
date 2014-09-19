@@ -75,3 +75,21 @@ struct evhit : sc::event< evhit >
 
 	}
 };
+
+struct evcontact : sc::event < evcontact >
+{
+	ptr_gameobject m_obj;
+	evcontact(ptr_gameobject arg_obj)
+		:m_obj(arg_obj)
+	{
+	}
+};
+
+struct evforcemove : sc::event < evcontact >
+{
+	b2Vec2 m_dest;
+	evforcemove(b2Vec2 arg_dest)
+		:m_dest(arg_dest)
+	{
+	}
+};

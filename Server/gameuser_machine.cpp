@@ -70,7 +70,7 @@ gameuser_machine::gameuser_machine(weakptr_room arg_room, ptr_b2world arg_world,
 	makepacket_gameuser_info();
 	m_StateType = 0;
 
-	m_swordangle = 100 * (b2_pi / 180);
+	m_swordangle = 80 * (b2_pi / 180);
 
 	m_directiontype = databody::movedirectiontype::_right;
 
@@ -157,7 +157,10 @@ void gameuser_machine::raycast(raycastcallback* callback, const float& angle, co
 	b2Vec2 point1 = m_body->GetPosition();
 	b2Vec2 d(L * cosf(_angle * (b2_pi / 180)), L * sinf(_angle * (b2_pi / 180)));
 	b2Vec2 point2 = point1 + d;
-	callback->m_ignorebody;
+	std::cout << d.x <<" " << d.y << endl;
+	std::cout << d.Length()<<endl;
+
+	std::cout << point1.x << " " << point1.y << " " << point2.x << " " << point2.y<<endl;
 	m_world->RayCast(callback, point1, point2);
 }
 
@@ -298,7 +301,7 @@ sc::result gameuser_move::react(const evskill & arg_evt)
 
 gameuser_skill1::gameuser_skill1()
 {
-	m_angle = 100.0f;
+	m_angle = 80.0f;
 	init = true;
 	loop = false;
 	end = false;
@@ -328,9 +331,9 @@ sc::result gameuser_skill1::react(const evtick &arg_evt)
 	}
 	if (loop == true)
 	{
-		m_angle += arg_evt.m_tick * 250;
+		m_angle += arg_evt.m_tick * 400;
 
-		if (m_angle > 100.0f && m_angle < 230.0f)
+		if (m_angle > 80.0f && m_angle < 230.0f)
 		{
 			
 
@@ -338,7 +341,7 @@ sc::result gameuser_skill1::react(const evtick &arg_evt)
 			if (hit == false)
 			{
 				RayCastClosestCallback a;
-				context<gameuser_machine>().raycast(&a, m_angle,2.0f);
+				context<gameuser_machine>().raycast(&a, m_angle,3.0f);
 				if (a.m_hit == true)
 				{
 					hit = true;
@@ -351,7 +354,7 @@ sc::result gameuser_skill1::react(const evtick &arg_evt)
 		}
 		else
 		{
-			context<gameuser_machine>().m_swordangle = 100 * (b2_pi / 180);
+			context<gameuser_machine>().m_swordangle = 80 * (b2_pi / 180);
 		}
 
 		if (m_angle > 240)
@@ -467,6 +470,7 @@ sc::result gameuser_common::react(const evmakedata &arg_evt)
 
 sc::result gameuser_common::react(const evtick &arg_evt)
 {
+
 	context<gameuser_machine>().deletepacket_gameuser_data(); // 한틱에 여러번 불릴수 있다.
 	return forward_event();
 }
@@ -485,8 +489,6 @@ sc::result gameuser_common::react(const evdeletegameobject &arg_evt)
 sc::result gameuser_common::react(const evmakepacketdata &arg_evt)
 {
 	{
-
-	
 		auto& _gameuser_machine = context<gameuser_machine>();
 		auto curitr = _gameuser_machine.m_infolist.begin();
 		while (curitr != _gameuser_machine.m_infolist.end())
@@ -494,7 +496,7 @@ sc::result gameuser_common::react(const evmakepacketdata &arg_evt)
 			auto _sharedptr = curitr->first.lock();
 			if (_sharedptr != NULL)
 			{
-				_sharedptr->makepacket_info(arg_evt.m_tcppacket);
+				_sharedptr->makepacket_info(arg_evt.m_tcppacket,false);
 				curitr++;
 			}
 			else
@@ -530,6 +532,14 @@ sc::result gameuser_common::react(const evmakepacketdata &arg_evt)
 		}
 		arg_evt.m_udppacket->addmessage(_gameuser_machine.get_gameuser_data());
 	}
+	return discard_event();
+}
+
+sc::result gameuser_common::react(const evforcemove &arg_evt)
+{
+	//m_bforceposition = true;
+	//m_forceposition = arg_evt.m_dest;
+	context<gameuser_machine>().m_body->SetTransform(arg_evt.m_dest, 0);
 	return discard_event();
 }
 

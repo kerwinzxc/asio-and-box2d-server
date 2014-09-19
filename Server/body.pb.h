@@ -46,6 +46,7 @@ class exit;
 class move;
 class jump;
 class skill1;
+class action;
 class commandresult;
 
 enum shapetype {
@@ -351,6 +352,13 @@ class gameuser_info : public ::google::protobuf::Message {
   inline float mass() const;
   inline void set_mass(float value);
 
+  // required bool control = 4;
+  inline bool has_control() const;
+  inline void clear_control();
+  static const int kControlFieldNumber = 4;
+  inline bool control() const;
+  inline void set_control(bool value);
+
   // @@protoc_insertion_point(class_scope:databody.gameuser_info)
  private:
   inline void set_has_gameobject_index();
@@ -359,15 +367,18 @@ class gameuser_info : public ::google::protobuf::Message {
   inline void clear_has_max_hp();
   inline void set_has_mass();
   inline void clear_has_mass();
+  inline void set_has_control();
+  inline void clear_has_control();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::int32 gameobject_index_;
   float max_hp_;
   float mass_;
+  bool control_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_body_2eproto();
   friend void protobuf_AssignDesc_body_2eproto();
@@ -1384,6 +1395,88 @@ class skill1 : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class action : public ::google::protobuf::Message {
+ public:
+  action();
+  virtual ~action();
+
+  action(const action& from);
+
+  inline action& operator=(const action& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const action& default_instance();
+
+  void Swap(action* other);
+
+  // implements Message ----------------------------------------------
+
+  action* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const action& from);
+  void MergeFrom(const action& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required bool flag = 1;
+  inline bool has_flag() const;
+  inline void clear_flag();
+  static const int kFlagFieldNumber = 1;
+  inline bool flag() const;
+  inline void set_flag(bool value);
+
+  // @@protoc_insertion_point(class_scope:databody.action)
+ private:
+  inline void set_has_flag();
+  inline void clear_has_flag();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  bool flag_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_body_2eproto();
+  friend void protobuf_AssignDesc_body_2eproto();
+  friend void protobuf_ShutdownFile_body_2eproto();
+
+  void InitAsDefaultInstance();
+  static action* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class commandresult : public ::google::protobuf::Message {
  public:
   commandresult();
@@ -1747,6 +1840,28 @@ inline float gameuser_info::mass() const {
 inline void gameuser_info::set_mass(float value) {
   set_has_mass();
   mass_ = value;
+}
+
+// required bool control = 4;
+inline bool gameuser_info::has_control() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void gameuser_info::set_has_control() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void gameuser_info::clear_has_control() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void gameuser_info::clear_control() {
+  control_ = false;
+  clear_has_control();
+}
+inline bool gameuser_info::control() const {
+  return control_;
+}
+inline void gameuser_info::set_control(bool value) {
+  set_has_control();
+  control_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -2556,6 +2671,32 @@ inline bool skill1::flag() const {
   return flag_;
 }
 inline void skill1::set_flag(bool value) {
+  set_has_flag();
+  flag_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// action
+
+// required bool flag = 1;
+inline bool action::has_flag() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void action::set_has_flag() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void action::clear_has_flag() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void action::clear_flag() {
+  flag_ = false;
+  clear_has_flag();
+}
+inline bool action::flag() const {
+  return flag_;
+}
+inline void action::set_flag(bool value) {
   set_has_flag();
   flag_ = value;
 }

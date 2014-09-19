@@ -14,7 +14,8 @@ public:
 
 	virtual void initiate() = 0;
 	virtual void process_event(const sc::event_base & evt) = 0;
-	virtual void makepacket_info(packet_encoder* packet){}
+	virtual void post_event(const sc::event_base & evt) = 0;
+	virtual void makepacket_info(packet_encoder* packet, bool control) = 0;
 	virtual void makepacket_data(packet_encoder* packet){}
 
 	unsigned int get_gameobjectindex() const { return m_gameobjectindex; }

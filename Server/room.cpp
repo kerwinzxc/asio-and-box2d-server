@@ -1,14 +1,19 @@
 #include "stdafx.h"
 #include "room.h"
-#include "gameuser_machine.h"
-#include "staticobject_machine.h"
-#include "dumbmob_machine.h"
+
 
 #include "packet_data.h"
 #include "packet_encoder.h"
 
 #include "util_makeindex.h"
 #include "user_session.h"
+
+
+
+#include "gameuser_machine.h"
+#include "staticobject_machine.h"
+#include "dumbmob_machine.h"
+#include "potal_machine.h"
 
 room::room(boost::asio::io_service& arg_io)
 	:m_timer(arg_io)
@@ -40,7 +45,7 @@ void room::start()
 	//      |      |  edgechain
 	//      |______|
 	//////////////////////////////////////////////////////////////////////////
-	b2Vec2 vec[4];
+	b2Vec2 *vec = new b2Vec2[4];
 	vec[0].Set(-100, 100);
 	vec[1].Set(-100, 0);
 	vec[2].Set(100, 0);
@@ -50,7 +55,7 @@ void room::start()
 	obj->initiate();
 	m_gameobjectindexmap.insert(tgameobjectindexmap::value_type(obj->get_gameobjectindex(), obj));
 
-	b2Vec2 vec2[2];
+	b2Vec2 *vec2 = new b2Vec2[2];
 	vec2[0].Set(-10, 4);
 	vec2[1].Set(10, 4);
 	ptr_gameobject obj2 = boost::make_shared<staticobject>(m_world, m_makeindex, vec2, 2);
@@ -61,6 +66,13 @@ void room::start()
 	ptr_gameobject obj3 = boost::make_shared<dumbmob>(m_world, m_makeindex, mobposition);
 	obj3->initiate();
 	m_gameobjectindexmap.insert(tgameobjectindexmap::value_type(obj3->get_gameobjectindex(), obj3));
+
+
+	b2Vec2 m_source(0.0f, 0.0f);
+	b2Vec2 m_dest(10.0f,30.0f);
+	ptr_gameobject obj4 = boost::make_shared<potal>(m_world, m_makeindex, m_source, m_dest);
+	obj4->initiate();
+	m_gameobjectindexmap.insert(tgameobjectindexmap::value_type(obj4->get_gameobjectindex(), obj4));
 	
 	
 }
@@ -147,7 +159,7 @@ void room::dispatch_join(ptr_user_session arg_user, boost::function<void(ptr_roo
 		ptr_packet_data _data = boost::make_shared<packet_data>();
 		packet_encoder _encode(_data);
 
-		obj->makepacket_info(&_encode);
+		obj->makepacket_info(&_encode, true);
 		_encode.makeheader();
 		if (_data->get_bodysize() != 0)
 		{
@@ -280,7 +292,26 @@ void room::BeginContact(b2Contact* contact)
 			if (_obja != NULL && _objb != NULL)
 			{
 				evaddgameobject evt(_objb);
-				_obja->process_event(evt);
+				_obja->post_event(evt);
+			}
+		}
+	}
+
+	if (check_tagstatus(_taga, _tagb, FixtureTag_PotalRader, arg_result))
+	{
+		if (arg_result == true)
+		{
+			std::swap(_taga, _tagb);
+			std::swap(_indexgameobjectA, _indexgameobjectB);
+		}
+		if (check_tagstatus(_tagb, FixtureTag_Body) && check_tagstatus(_tagb, FixtureTag_Gameuser))
+		{
+			ptr_gameobject _obja = get_gameobject(_indexgameobjectA);
+			ptr_gameobject _objb = get_gameobject(_indexgameobjectB);
+			if (_obja != NULL && _objb != NULL)
+			{
+				evcontact evt(_objb);
+				_obja->post_event(evt);
 			}
 		}
 	}
@@ -311,10 +342,13 @@ void room::EndContact(b2Contact* contact)
 			if (_obja != NULL && _objb != NULL)
 			{
 				evdeletegameobject evt(_objb);
-				_obja->process_event(evt);
+				_obja->post_event(evt);
 			}
 		}
 	}
+
+	
+
 }
 
 
@@ -334,7 +368,7 @@ void room::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
 
 
 	bool arg_result;
-	if (check_tagstatus(_taga, _tagb, FixtureTag_Wire, arg_result))
+	if (check_tagstatus(_taga, _tagb, FixtureTag_Ground, arg_result))
 	{
 		if (arg_result == true)
 		{

@@ -4,7 +4,6 @@
 class raycastcallback : public b2RayCastCallback
 {
 public :
-	b2Body* m_ignorebody;
 };
 
 class RayCastClosestCallback : public raycastcallback
@@ -12,7 +11,6 @@ class RayCastClosestCallback : public raycastcallback
 public:
 	RayCastClosestCallback()
 	{
-		m_ignorebody = NULL;
 		m_hit = false;
 	}
 
@@ -49,17 +47,12 @@ class RayCastAnyCallback : public raycastcallback
 public:
 	RayCastAnyCallback()
 	{
-		m_ignorebody = NULL;
 		m_hit = false;
 	}
 
 	float32 ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float32 fraction)
 	{
 		b2Body* body = fixture->GetBody();
-		if (m_ignorebody == body)
-		{
-			return -1.0f;
-		}
 
 		m_hit = true;
 		m_body = body;
@@ -90,17 +83,12 @@ public:
 
 	RayCastMultipleCallback()
 	{
-		m_ignorebody = NULL;
 		m_count = 0;
 	}
 
 	float32 ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float32 fraction)
 	{
 		b2Body* body = fixture->GetBody();
-		if (m_ignorebody == body)
-		{
-			return -1.0f;
-		}
 
 		b2Assert(m_count < e_maxCount);
 

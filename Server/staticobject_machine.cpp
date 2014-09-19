@@ -23,6 +23,7 @@ staticobject_machine::staticobject_machine( ptr_b2world arg_world, unsigned int 
 
 	fixturetag tag;
 	tag.setoption(FixtureTag_Wire, true);
+	tag.setoption(FixtureTag_Ground, true);
 
 	fd.userData = (void*)tag.getvalue();
 	fd.friction = 1.0f;

@@ -13,6 +13,15 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
+    <Filter Include="machine">
+      <UniqueIdentifier>{41ed042c-fcee-4ce9-bfaa-b77fddead080}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="packet">
+      <UniqueIdentifier>{8a2cada1-9b9e-4850-a16c-23d35fd46b03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="def">
+      <UniqueIdentifier>{0591e497-03a8-4796-aa64-c3baea5814a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -24,13 +33,7 @@
     <ClInclude Include="targetver.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="def.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="user_session.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="packet_data.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="server.h">
@@ -40,27 +43,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="room.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="body.pb.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="packet_decoder.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="packet_encoder.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="staticobject_machine.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="interface.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="gameuser_machine.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="event.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="util_makeindex.h">
@@ -75,11 +57,41 @@
     <ClInclude Include="multi_index.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Raycast.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="dumbmob_machine.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>machine</Filter>
+    </ClInclude>
+    <ClInclude Include="gameuser_machine.h">
+      <Filter>machine</Filter>
+    </ClInclude>
+    <ClInclude Include="staticobject_machine.h">
+      <Filter>machine</Filter>
+    </ClInclude>
+    <ClInclude Include="potal_machine.h">
+      <Filter>machine</Filter>
+    </ClInclude>
+    <ClInclude Include="event.h">
+      <Filter>def</Filter>
+    </ClInclude>
+    <ClInclude Include="packet_data.h">
+      <Filter>packet</Filter>
+    </ClInclude>
+    <ClInclude Include="packet_decoder.h">
+      <Filter>packet</Filter>
+    </ClInclude>
+    <ClInclude Include="packet_encoder.h">
+      <Filter>packet</Filter>
+    </ClInclude>
+    <ClInclude Include="interface.h">
+      <Filter>def</Filter>
+    </ClInclude>
+    <ClInclude Include="def.h">
+      <Filter>def</Filter>
+    </ClInclude>
+    <ClInclude Include="body.pb.h">
+      <Filter>packet</Filter>
+    </ClInclude>
+    <ClInclude Include="Raycast.h">
+      <Filter>def</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -92,9 +104,6 @@
     <ClCompile Include="user_session.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="packet_data.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="server.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -102,21 +111,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="room.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="body.pb.cc">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="packet_decoder.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="packet_encoder.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="staticobject_machine.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="gameuser_machine.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="util_makeindex.cpp">
@@ -135,7 +129,28 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="dumbmob_machine.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>machine</Filter>
+    </ClCompile>
+    <ClCompile Include="gameuser_machine.cpp">
+      <Filter>machine</Filter>
+    </ClCompile>
+    <ClCompile Include="staticobject_machine.cpp">
+      <Filter>machine</Filter>
+    </ClCompile>
+    <ClCompile Include="potal_machine.cpp">
+      <Filter>machine</Filter>
+    </ClCompile>
+    <ClCompile Include="packet_data.cpp">
+      <Filter>packet</Filter>
+    </ClCompile>
+    <ClCompile Include="packet_decoder.cpp">
+      <Filter>packet</Filter>
+    </ClCompile>
+    <ClCompile Include="packet_encoder.cpp">
+      <Filter>packet</Filter>
+    </ClCompile>
+    <ClCompile Include="body.pb.cc">
+      <Filter>packet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

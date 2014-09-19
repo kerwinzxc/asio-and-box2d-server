@@ -39,6 +39,7 @@ class dumbmob : public gameobject, public boost::enable_shared_from_this < dumbm
 
 	ptr_dumbmob_machine m_machine;
 	ptr_b2world m_world;
+	bool isprocess = false;
 
 public:
 	dumbmob(ptr_b2world arg_world, ptr_makeindex arg_makeindex, b2Vec2 arg_pos)
@@ -50,16 +51,30 @@ public:
 
 	virtual void initiate()
 	{
-		
+
 		m_machine->initiate();
 	}
 
 	virtual void process_event(const sc::event_base & evt)
 	{
-		m_machine->process_event(evt);
+		if (isprocess == false)
+		{
+			isprocess = true;
+			m_machine->process_event(evt);
+		}
+		else if (isprocess == true)
+		{
+			m_machine->post_event_impl(evt);
+		}
+		isprocess = false;
 	}
 
-	virtual void makepacket_info(packet_encoder* arg_packet){
+	virtual void post_event(const sc::event_base & evt)
+	{
+		m_machine->post_event_impl(evt);
+	}
+
+	virtual void makepacket_info(packet_encoder* arg_packet, bool control){
 		arg_packet->addmessage(m_machine->get_info());
 	}
 
