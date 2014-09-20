@@ -14,6 +14,8 @@
 #include "staticobject_machine.h"
 #include "dumbmob_machine.h"
 #include "potal_machine.h"
+#include "regenerationmob_machine.h"
+#include "basemob_machine.h"
 
 room::room(boost::asio::io_service& arg_io)
 	:m_timer(arg_io)
@@ -45,13 +47,14 @@ void room::start()
 	//      |      |  edgechain
 	//      |______|
 	//////////////////////////////////////////////////////////////////////////
-	b2Vec2 *vec = new b2Vec2[4];
+	b2Vec2 *vec = new b2Vec2[5];
 	vec[0].Set(-100, 100);
 	vec[1].Set(-100, 0);
-	vec[2].Set(100, 0);
-	vec[3].Set(100, 100);
+	vec[2].Set(0, 0);
+	vec[3].Set(100, 0);
+	vec[4].Set(100, 100);
 
-	ptr_gameobject obj = boost::make_shared<staticobject>(m_world, m_makeindex,vec, 4);
+	ptr_gameobject obj = boost::make_shared<staticobject>(m_world, m_makeindex,vec, 5);
 	obj->initiate();
 	m_gameobjectindexmap.insert(tgameobjectindexmap::value_type(obj->get_gameobjectindex(), obj));
 
@@ -62,17 +65,16 @@ void room::start()
 	obj2->initiate();
 	m_gameobjectindexmap.insert(tgameobjectindexmap::value_type(obj2->get_gameobjectindex(), obj2));
 
-	b2Vec2 mobposition(1.0f, 0.2f);
-	ptr_gameobject obj3 = boost::make_shared<dumbmob>(m_world, m_makeindex, mobposition);
-	obj3->initiate();
-	m_gameobjectindexmap.insert(tgameobjectindexmap::value_type(obj3->get_gameobjectindex(), obj3));
-
 
 	b2Vec2 m_source(0.0f, 0.0f);
 	b2Vec2 m_dest(10.0f,30.0f);
 	ptr_gameobject obj4 = boost::make_shared<potal>(m_world, m_makeindex, m_source, m_dest);
 	obj4->initiate();
 	m_gameobjectindexmap.insert(tgameobjectindexmap::value_type(obj4->get_gameobjectindex(), obj4));
+
+	ptr_gameobject obj3 = boost::make_shared<regenerationmob>(m_world, shared_from_this(), m_makeindex, -10.0f, 10.0f, 10.0f, -1.0f, 1.0f,20);
+	obj3->initiate();
+	m_gameobjectindexmap.insert(tgameobjectindexmap::value_type(obj3->get_gameobjectindex(), obj3));
 	
 	
 }
@@ -390,4 +392,25 @@ void room::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
 			}
 		}
 	}
+
+	if (check_tagstatus(_taga, _tagb, FixtureTag_Mob, arg_result))
+	{
+		if (arg_result == true)
+		{
+			swap(_taga, _tagb);
+		}
+		if (check_tagstatus(_tagb, FixtureTag_Mob))
+		{
+			contact->SetEnabled(false);
+		}
+	}
+
+}
+
+weakptr_gameobject room::createdumbmob(b2Vec2 arg_positon)
+{
+	ptr_gameobject obj = boost::make_shared<basemob>(m_world, m_makeindex, arg_positon);
+	obj->initiate();
+	m_gameobjectindexmap.insert(tgameobjectindexmap::value_type(obj->get_gameobjectindex(), obj));
+	return obj;
 }

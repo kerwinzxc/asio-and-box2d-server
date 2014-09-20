@@ -6,10 +6,10 @@ class raycastcallback : public b2RayCastCallback
 public :
 };
 
-class RayCastClosestCallback : public raycastcallback
+class raycast_closestcallback : public raycastcallback
 {
 public:
-	RayCastClosestCallback()
+	raycast_closestcallback()
 	{
 		m_hit = false;
 	}
@@ -42,10 +42,10 @@ public:
 
 // This callback finds any hit. Polygon 0 is filtered. For this type of query we are usually
 // just checking for obstruction, so the actual fixture and hit point are irrelevant. 
-class RayCastAnyCallback : public raycastcallback
+class raycast_anycallback : public raycastcallback
 {
 public:
-	RayCastAnyCallback()
+	raycast_anycallback()
 	{
 		m_hit = false;
 	}
@@ -73,7 +73,7 @@ public:
 // This ray cast collects multiple hits along the ray. Polygon 0 is filtered.
 // The fixtures are not necessary reported in order, so we might not capture
 // the closest fixture.
-class RayCastMultipleCallback : public raycastcallback
+class raycast_multiplecallback : public raycastcallback
 {
 public:
 	enum
@@ -81,7 +81,7 @@ public:
 		e_maxCount = 3
 	};
 
-	RayCastMultipleCallback()
+	raycast_multiplecallback()
 	{
 		m_count = 0;
 	}
@@ -111,4 +111,66 @@ public:
 	b2Vec2 m_points[e_maxCount];
 	b2Vec2 m_normals[e_maxCount];
 	int32 m_count;
+};
+
+
+class raycast_mobregencallback : public raycastcallback
+{
+public:
+	raycast_mobregencallback()
+	{
+		m_hit = false;
+	}
+
+	float32 ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float32 fraction)
+	{
+		b2Body* body = fixture->GetBody();
+		fixturetag tag((unsigned long)fixture->GetUserData());
+
+		m_tag = tag;
+
+		m_hit = true;
+		m_point = point;
+		m_normal = normal;
+
+		// By returning the current fraction, we instruct the calling code to clip the ray and
+		// continue the ray-cast to the next fixture. WARNING: do not assume that fixtures
+		// are reported in order. However, by clipping, we can always get the closest fixture.
+		return fraction;
+	}
+
+	bool m_hit;
+	fixturetag m_tag;
+	b2Vec2 m_point;
+	b2Vec2 m_normal;
+};
+
+
+
+class aabbquery_notingbody : public b2QueryCallback
+{
+public:
+	aabbquery_notingbody()
+	{
+		isHit = false;
+	}
+
+	bool ReportFixture(b2Fixture* fixture)
+	{
+		fixturetag tag = fixturetag((unsigned long)fixture->GetUserData());
+
+		fixture->GetAABB(NULL);
+		if (tag.getoption(FixtureTag_Ground) == false && tag.getoption(FixtureTag_SightRader) == false) // 그라운드가 아닌걸 만낫을때.
+		{
+			isHit = false;
+			return false; // 종료 시킨다.
+		}
+		else
+		{
+			isHit = true; // 그라운드를 만낫으면 플래그를변경 해주고 다시 탐색 바디를 만날경우 false , 그대로 그라운드일경우 hit!
+		}
+		// Continue the query.
+		return true;
+	}
+	bool isHit;
 };

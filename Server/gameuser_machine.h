@@ -3,11 +3,10 @@
 #include "event.h"
 #include "body.pb.h"
 #include "packet_encoder.h"
-#include "Raycast.h"
+#include "query.h"
 
 
 class gameuser_live;
-
 class gameuser_idle;
 class gameuser_move;
 class gameuser_skill1;

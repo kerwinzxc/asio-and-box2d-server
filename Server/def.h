@@ -45,6 +45,8 @@ class gameuser_machine;
 class staticobject_machine;
 class dumbmob_machine;
 class potal_machine;
+class regenerationmob_machine;
+class basemob_machine;
 
 class gameobject;
 
@@ -73,6 +75,8 @@ typedef boost::shared_ptr< gameuser_machine > ptr_gameuser_machine;
 typedef boost::shared_ptr< staticobject_machine > ptr_staticobject_machine;
 typedef boost::shared_ptr< dumbmob_machine > ptr_dumbmob_machine;
 typedef boost::shared_ptr< potal_machine > ptr_potal_machine;
+typedef boost::shared_ptr< regenerationmob_machine > ptr_regenerationmob_machine;
+typedef boost::shared_ptr< basemob_machine > ptr_basemob_machine;
 
 typedef boost::weak_ptr < user_session > weakptr_user_session;
 typedef boost::weak_ptr < room > weakptr_room;

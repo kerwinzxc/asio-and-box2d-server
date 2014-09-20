@@ -164,6 +164,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="basemob_machine.h" />
     <ClInclude Include="body.pb.h" />
     <ClInclude Include="def.h" />
     <ClInclude Include="dumbmob_machine.h" />
@@ -175,7 +176,8 @@
     <ClInclude Include="packet_encoder.h" />
     <ClInclude Include="packet_data.h" />
     <ClInclude Include="potal_machine.h" />
-    <ClInclude Include="Raycast.h" />
+    <ClInclude Include="query.h" />
+    <ClInclude Include="regenerationmob_machine.h" />
     <ClInclude Include="room.h" />
     <ClInclude Include="room_provider.h" />
     <ClInclude Include="server.h" />
@@ -188,6 +190,7 @@
     <ClInclude Include="util_makeindex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="basemob_machine.cpp" />
     <ClCompile Include="body.pb.cc" />
     <ClCompile Include="dumbmob_machine.cpp" />
     <ClCompile Include="gameuser_machine.cpp" />
@@ -198,6 +201,7 @@
     <ClCompile Include="packet_encoder.cpp" />
     <ClCompile Include="packet_data.cpp" />
     <ClCompile Include="potal_machine.cpp" />
+    <ClCompile Include="regenerationmob_machine.cpp" />
     <ClCompile Include="room.cpp" />
     <ClCompile Include="room_provider.cpp" />
     <ClCompile Include="server.cpp" />

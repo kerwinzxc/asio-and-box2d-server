@@ -50,5 +50,6 @@ public:
 	virtual void PreSolve(b2Contact* contact, const b2Manifold* oldManifold);
 	bool check_tagstatus(const fixturetag& arg_taga, const fixturetag& arg_tagb, size_t arg_comparea, bool& arg_result);
 	bool check_tagstatus(const fixturetag& arg_tag, size_t arg_compare);
+	weakptr_gameobject createdumbmob(b2Vec2 arg_positon);
 };
 

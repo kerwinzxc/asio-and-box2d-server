@@ -32,7 +32,9 @@
 #include <boost\coroutine\all.hpp>
 #include <boost\mpl\list.hpp>
 #include <boost\log\trivial.hpp>
-
+#include <boost\random\uniform_real_distribution.hpp>
+#include <boost\random\mersenne_twister.hpp>
+#include <boost\random\discrete_distribution.hpp>
 
 #include <boost\statechart\state_machine.hpp>
 #include <boost\statechart\simple_state.hpp>

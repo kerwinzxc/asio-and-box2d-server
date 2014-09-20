@@ -90,7 +90,13 @@
     <ClInclude Include="body.pb.h">
       <Filter>packet</Filter>
     </ClInclude>
-    <ClInclude Include="Raycast.h">
+    <ClInclude Include="regenerationmob_machine.h">
+      <Filter>machine</Filter>
+    </ClInclude>
+    <ClInclude Include="basemob_machine.h">
+      <Filter>machine</Filter>
+    </ClInclude>
+    <ClInclude Include="query.h">
       <Filter>def</Filter>
     </ClInclude>
   </ItemGroup>
@@ -151,6 +157,12 @@
     </ClCompile>
     <ClCompile Include="body.pb.cc">
       <Filter>packet</Filter>
+    </ClCompile>
+    <ClCompile Include="regenerationmob_machine.cpp">
+      <Filter>machine</Filter>
+    </ClCompile>
+    <ClCompile Include="basemob_machine.cpp">
+      <Filter>machine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

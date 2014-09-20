@@ -340,7 +340,7 @@ sc::result gameuser_skill1::react(const evtick &arg_evt)
 			context<gameuser_machine>().m_swordangle = m_angle * (b2_pi / 180);
 			if (hit == false)
 			{
-				RayCastClosestCallback a;
+				raycast_closestcallback a;
 				context<gameuser_machine>().raycast(&a, m_angle,3.0f);
 				if (a.m_hit == true)
 				{
@@ -348,7 +348,11 @@ sc::result gameuser_skill1::react(const evtick &arg_evt)
 					auto _room = context<gameuser_machine>().m_room.lock();
 					auto _gameobject = _room->get_gameobject((unsigned int)a.m_body->GetUserData());
 					evhit evt(10);
-					_gameobject->process_event(evt);
+					if (_gameobject != NULL)
+					{
+						_gameobject->process_event(evt);
+					}
+					
 				}
 			}
 		}

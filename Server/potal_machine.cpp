@@ -27,6 +27,7 @@ potal_machine::potal_machine(ptr_b2world arg_world, int arg_gameobjectindex, b2V
 
 potal_machine::~potal_machine()
 {
+	m_world->DestroyBody(m_body);
 }
 
 sc::result potal_common::react(const evcontact &arg_evt)
