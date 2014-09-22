@@ -174,3 +174,39 @@ public:
 	}
 	bool isHit;
 };
+
+
+
+
+class raycast_guidelinecallback : public raycastcallback
+{
+public:
+	raycast_guidelinecallback()
+	{
+		m_hit = false;
+	}
+
+	float32 ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float32 fraction)
+	{
+		b2Body* body = fixture->GetBody();
+		fixturetag tag((unsigned long)fixture->GetUserData());
+		if (tag.getoption(FixtureTag_GuideLine) != true)
+		{
+			return -1.0f;
+		}
+
+		m_hit = true;
+		m_body = body;
+		m_point = point;
+
+		// By returning the current fraction, we instruct the calling code to clip the ray and
+		// continue the ray-cast to the next fixture. WARNING: do not assume that fixtures
+		// are reported in order. However, by clipping, we can always get the closest fixture.
+		return fraction;
+	}
+
+	bool m_hit;
+	b2Body* m_body;
+	b2Vec2 m_point;
+//	b2Vec2 m_normal;
+};

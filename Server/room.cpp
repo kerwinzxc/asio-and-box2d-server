@@ -47,21 +47,18 @@ void room::start()
 	//      |      |  edgechain
 	//      |______|
 	//////////////////////////////////////////////////////////////////////////
-	b2Vec2 *vec = new b2Vec2[5];
-	vec[0].Set(-100, 100);
-	vec[1].Set(-100, 0);
-	vec[2].Set(0, 0);
-	vec[3].Set(100, 0);
-	vec[4].Set(100, 100);
+	b2Vec2 *vec = new b2Vec2[2];
+	vec[0].Set(-100, 0);
+	vec[1].Set(100, 0);
 
-	ptr_gameobject obj = boost::make_shared<staticobject>(m_world, m_makeindex,vec, 5);
+	ptr_gameobject obj = boost::make_shared<staticobject>(m_world, m_makeindex,vec, 2,true);
 	obj->initiate();
 	m_gameobjectindexmap.insert(tgameobjectindexmap::value_type(obj->get_gameobjectindex(), obj));
 
 	b2Vec2 *vec2 = new b2Vec2[2];
 	vec2[0].Set(-10, 4);
 	vec2[1].Set(10, 4);
-	ptr_gameobject obj2 = boost::make_shared<staticobject>(m_world, m_makeindex, vec2, 2);
+	ptr_gameobject obj2 = boost::make_shared<staticobject>(m_world, m_makeindex, vec2, 2,false);
 	obj2->initiate();
 	m_gameobjectindexmap.insert(tgameobjectindexmap::value_type(obj2->get_gameobjectindex(), obj2));
 
@@ -367,7 +364,8 @@ void room::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
 	fixturetag _tagb((unsigned long)contact->GetFixtureB()->GetUserData());
 	b2Vec2 _veca = contact->GetFixtureA()->GetBody()->GetPosition();
 	b2Vec2 _vecb = contact->GetFixtureB()->GetBody()->GetPosition();
-
+	unsigned int _indexgameobjectA = (unsigned int)contact->GetFixtureA()->GetBody()->GetUserData();
+	unsigned int _indexgameobjectB = (unsigned int)contact->GetFixtureB()->GetBody()->GetUserData();
 
 	bool arg_result;
 	if (check_tagstatus(_taga, _tagb, FixtureTag_Ground, arg_result))
@@ -398,8 +396,25 @@ void room::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
 		if (arg_result == true)
 		{
 			swap(_taga, _tagb);
+			swap(_indexgameobjectA, _indexgameobjectB);
 		}
-		if (check_tagstatus(_tagb, FixtureTag_Mob))
+		if (check_tagstatus(_tagb, FixtureTag_Gameuser))
+		{
+			ptr_gameobject _obja = get_gameobject(_indexgameobjectA);
+			ptr_gameobject _objb = get_gameobject(_indexgameobjectB);
+
+			evcontact evt(_objb);
+			_obja->post_event(evt);
+		}
+	}
+
+	if (check_tagstatus(_taga, _tagb, FixtureTag_Body, arg_result))
+	{
+		if (arg_result == true)
+		{
+			swap(_taga, _tagb);
+		}
+		if (check_tagstatus(_tagb, FixtureTag_Body))
 		{
 			contact->SetEnabled(false);
 		}

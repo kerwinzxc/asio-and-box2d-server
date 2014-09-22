@@ -5,7 +5,7 @@
 #include "packet_encoder.h"
 
 
-staticobject_machine::staticobject_machine( ptr_b2world arg_world, unsigned int arg_gameobjectindex, b2Vec2* arg_edgelist, int arg_edgecount)
+staticobject_machine::staticobject_machine( ptr_b2world arg_world, unsigned int arg_gameobjectindex, b2Vec2* arg_edgelist, int arg_edgecount , bool isguideline)
 	: m_world(arg_world)
 	, m_gameobjectindex(arg_gameobjectindex)
 	, m_info(NULL)
@@ -29,6 +29,44 @@ staticobject_machine::staticobject_machine( ptr_b2world arg_world, unsigned int 
 	fd.friction = 1.0f;
 
 	m_body->CreateFixture(&fd);
+
+
+	if(isguideline == true)
+	{
+		b2Vec2 left[2];
+		left[0].Set(arg_edgelist[0].x, arg_edgelist[0].y);
+		left[1].Set(arg_edgelist[0].x, arg_edgelist[0].y + 10);
+		b2ChainShape chain;
+		chain.CreateChain(left, 2);
+		fixturetag tag;
+		tag.setoption(FixtureTag_Wire, true);
+		tag.setoption(FixtureTag_GuideLine, true);
+
+		b2FixtureDef fd;
+		fd.shape = &chain;
+
+		fd.userData = (void*)tag.getvalue();
+
+		m_body->CreateFixture(&fd);
+	}
+	if (isguideline == true)
+	{
+		b2Vec2 right[2];
+		right[0].Set(arg_edgelist[arg_edgecount - 1].x, arg_edgelist[arg_edgecount - 1].y);
+		right[1].Set(arg_edgelist[arg_edgecount - 1].x, arg_edgelist[arg_edgecount - 1].y + 10);
+		b2ChainShape chain;
+		chain.CreateChain(right, 2);
+		fixturetag tag;
+		tag.setoption(FixtureTag_Wire, true);
+		tag.setoption(FixtureTag_GuideLine, true);
+
+		b2FixtureDef fd;
+		fd.shape = &chain;
+
+		fd.userData = (void*)tag.getvalue();
+
+		m_body->CreateFixture(&fd);
+	}
 
 	makepacket_staticobject_info(arg_edgelist, arg_edgecount);
 

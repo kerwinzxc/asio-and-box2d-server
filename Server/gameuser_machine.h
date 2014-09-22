@@ -48,6 +48,7 @@ public:
 
 	map<weakptr_gameobject,int> m_infolist;
 	map<weakptr_gameobject,int> m_datalist;
+	map<weakptr_gameobject, int> m_deletelist;
 
 
 	gameuser_machine(weakptr_room arg_room, ptr_b2world arg_world, unsigned arg_gameobjectindex);
@@ -67,6 +68,7 @@ public:
 	{
 		m_infolist.erase(arg_gameobject);
 		m_datalist.erase(arg_gameobject);
+		m_deletelist.insert(map<weakptr_gameobject, int>::value_type(arg_gameobject, arg_gameobject->get_gameobjectindex()));
 	}
 
 	void SetStateType(int val) { m_StateType = val; }
@@ -259,6 +261,7 @@ public:
 
 class gameuser_condition : public sc::simple_state<gameuser_condition , gameuser_live::orthogonal<1> >
 {
+	float m_hitcooldown;
 public:
 	gameuser_condition();
 	~gameuser_condition();

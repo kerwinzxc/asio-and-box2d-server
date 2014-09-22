@@ -69,8 +69,10 @@ struct evdeletegameobject : sc::event < evdeletegameobject >
 struct evhit : sc::event< evhit >
 {
 	float m_dameage;
-	evhit(float arg_dameage)
+	databody::movedirectiontype dir;
+	evhit(float arg_dameage,databody::movedirectiontype arg_dir)
 		: m_dameage(arg_dameage)
+		, dir(arg_dir)
 	{
 
 	}

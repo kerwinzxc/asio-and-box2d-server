@@ -26,7 +26,7 @@ public:
 	void delete_data();
 	void make_data();
 
-	void onhit(float arg_dameage);
+	void onhit(float arg_dameage, databody::movedirectiontype arg_dir);
 	bool checkdestory();
 
 };

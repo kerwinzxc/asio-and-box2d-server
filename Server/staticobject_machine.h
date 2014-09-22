@@ -20,7 +20,7 @@ class staticobject_machine : public sc::state_machine<staticobject_machine,stati
 
 
 public:
-	staticobject_machine( ptr_b2world arg_world, unsigned int arg_gameobjectindex, b2Vec2* arg_edgelist, int arg_edgecount);
+	staticobject_machine(ptr_b2world arg_world, unsigned int arg_gameobjectindex, b2Vec2* arg_edgelist, int arg_edgecount, bool isguideline);
 	~staticobject_machine();
 
 	void makepacket_staticobject_info(b2Vec2* arg_edgelist, int arg_edgecount);
@@ -41,13 +41,13 @@ class staticobject : public gameobject, public boost::enable_shared_from_this<st
 	bool isprocess = false;
 
 public:
-	staticobject(ptr_b2world arg_world, ptr_makeindex arg_makeindex, b2Vec2* arg_edgelist, int arg_edgecount)
+	staticobject(ptr_b2world arg_world, ptr_makeindex arg_makeindex, b2Vec2* arg_edgelist, int arg_edgecount, bool isguideline)
 		:m_world(arg_world)
 		, m_edgelist(arg_edgelist)
 		, m_edgecount(arg_edgecount)
 		, gameobject(arg_makeindex)
 	{
-		m_machine = boost::make_shared<staticobject_machine>(m_world, m_gameobjectindex, m_edgelist, m_edgecount);
+		m_machine = boost::make_shared<staticobject_machine>(m_world, m_gameobjectindex, m_edgelist, m_edgecount, isguideline);
 	}
 	~staticobject()
 	{	

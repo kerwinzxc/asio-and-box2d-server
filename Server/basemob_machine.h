@@ -20,6 +20,10 @@ class basemob_machine : public sc::state_machine<basemob_machine, basemob_base>
 
 	databody::dumbmob_data* m_data;
 	databody::dumbmob_info* m_info;
+
+	databody::movedirectiontype m_dir;
+	
+	
 	void make_info();
 	
 
@@ -34,12 +38,16 @@ public:
 	databody::dumbmob_data* get_data() const { return m_data; }
 
 	bool checkdestory();
-	void onhit(float arg_dameage);
+	void onhit(float arg_dameage, databody::movedirectiontype arg_dir);
 
 	void bodyleft();
 	void bodyright();
 	void bodyjump();
 	void bodynoting();
+	bool iszerovelocity();
+	bool checkguideline(int& arg_direction);
+
+	databody::movedirectiontype get_dir() const { return m_dir; }
 };
 
 class basemob : public gameobject, public boost::enable_shared_from_this < basemob >
@@ -104,11 +112,13 @@ class basemob_base : public sc::simple_state < basemob_base, basemob_machine, ba
 public:
 	typedef mpl::list < sc::custom_reaction < evtick >
 		, sc::custom_reaction<evmakedata>
-		, sc::custom_reaction < evhit >> reactions;
+		, sc::custom_reaction < evhit >
+		, sc::custom_reaction <evcontact> > reactions;
 
 	sc::result react(const evtick &arg_evt);
 	sc::result react(const evmakedata &arg_evt);
 	sc::result react(const evhit& arg_evt);
+	sc::result react(const evcontact& arg_evt);
 };
 
 
@@ -179,11 +189,18 @@ public:
 	sc::result react(const evtick &arg_evt)
 	{
 		// moveleft
-		context<basemob_machine>().bodyleft();
+		
 
 		if (m_remaintime < 0.0f)
 		{
-			return transit<basemob_random>();
+			if (context<basemob_machine>().iszerovelocity() == true)
+			{
+				return transit<basemob_random>();
+			}
+		}
+		else
+		{
+			context<basemob_machine>().bodyleft();
 		}
 		m_remaintime -= arg_evt.m_tick;
 		return forward_event();
@@ -201,11 +218,19 @@ public:
 	sc::result react(const evtick &arg_evt)
 	{
 		// moveright
-		context<basemob_machine>().bodyright();
+		
 
 		if (m_remaintime < 0.0f)
 		{
-			return transit<basemob_random>();
+			if (context<basemob_machine>().iszerovelocity() == true)
+			{
+				return transit<basemob_random>();
+			}
+			
+		}
+		else
+		{
+			context<basemob_machine>().bodyright();
 		}
 		m_remaintime -= arg_evt.m_tick;
 		return forward_event();
@@ -228,10 +253,9 @@ public:
 		{
 			context<basemob_machine>().bodyjump();
 			isjumped = true;
-		}
-		
+		}	
 
-		if (m_remaintime < 0.0f)
+		if (context<basemob_machine>().iszerovelocity() == true)
 		{
 			return transit<basemob_random>();
 		}

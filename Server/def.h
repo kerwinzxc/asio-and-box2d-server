@@ -140,6 +140,7 @@ struct fixturetag{
 #define FixtureTag_Mob 11
 #define FixtureTag_Npc 12
 #define FixtureTag_Ground 13
+#define FixtureTag_GuideLine 14
 
 
 enum packet_sendtype{ tcp , udp};

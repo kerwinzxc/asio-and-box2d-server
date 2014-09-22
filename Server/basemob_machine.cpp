@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "basemob_machine.h"
+#include "query.h"
 
 
 basemob_machine::basemob_machine(ptr_b2world arg_world, unsigned int arg_gameobjectindex, b2Vec2 arg_pos)
@@ -30,7 +31,7 @@ basemob_machine::basemob_machine(ptr_b2world arg_world, unsigned int arg_gameobj
 
 	m_maxhp = 100.0f;
 	m_curhp = m_maxhp;
-
+	m_dir = databody::_left;
 
 	make_info();
 }
@@ -88,30 +89,80 @@ bool basemob_machine::checkdestory()
 	return false;
 }
 
-void basemob_machine::onhit(float arg_dameage)
+void basemob_machine::onhit(float arg_dameage, databody::movedirectiontype arg_dir)
 {
-	m_body->ApplyForceToCenter(b2Vec2(0, arg_dameage * 2), true);
+	float x = 0.0f;
+	if (arg_dir == databody::_left)
+	{
+		x = -10;
+	}
+	else
+	{
+		x = 10;
+	}
+	m_body->ApplyForceToCenter(b2Vec2(x*3, arg_dameage * 3), true);
 	m_curhp -= arg_dameage;
 }
 
 void basemob_machine::bodyleft()
 {
-	m_body->SetLinearVelocity(b2Vec2(-2.0f, 0.0f));
+	m_dir = databody::_left;
+	b2Vec2 vec = m_body->GetLinearVelocity();
+	m_body->SetLinearVelocity(b2Vec2(-2.0f, vec.y));
 }
 
 void basemob_machine::bodyright()
 {
-	m_body->SetLinearVelocity(b2Vec2(2.0f, 0.0f));
+	m_dir = databody::_right;
+	b2Vec2 vec = m_body->GetLinearVelocity();
+	m_body->SetLinearVelocity(b2Vec2(2.0f, vec.y));
 }
 
 void basemob_machine::bodyjump()
 {
-	m_body->SetLinearVelocity(b2Vec2(0.0f, 10.0f));
+	b2Vec2 vec = m_body->GetLinearVelocity();
+	m_body->SetLinearVelocity(b2Vec2(vec.x, 10.0f));
 }
 
 void basemob_machine::bodynoting()
 {
-	m_body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+	//b2Vec2 vec = m_body->GetLinearVelocity();
+	//m_body->SetLinearVelocity(vec);
+}
+
+bool basemob_machine::iszerovelocity()
+{
+	b2Vec2 vec = m_body->GetLinearVelocity();
+	if (vec.y == 0.0f)
+		return true;
+
+	return false;
+}
+
+bool basemob_machine::checkguideline(int& arg_direction)
+{
+	raycast_guidelinecallback callback;
+	b2Vec2 start = m_body->GetPosition();
+	b2Vec2 end = start;
+
+	float x = start.x;
+
+	start.x -= 4.0f;
+	end.x += 4.0f;
+
+
+
+	m_world->RayCast(&callback, start, end);
+
+	if (callback.m_hit == true)
+	{
+		if (callback.m_point.x > x)
+			arg_direction = 1; // right
+		else
+			arg_direction = 0; // left
+		return true;
+	}
+	return false;
 }
 
 sc::result basemob_base::react(const evtick &arg_evt)
@@ -120,6 +171,20 @@ sc::result basemob_base::react(const evtick &arg_evt)
 	{
 		(*arg_evt.m_destory) = true;
 	}
+
+	int i;
+	if (context<basemob_machine>().checkguideline(i) == true)
+	{
+		if (i == 0)
+		{
+			return transit<basemob_right>();
+		}
+		else
+		{
+			return transit<basemob_left>();
+		}
+	}
+
 	context<basemob_machine>().delete_data();
 	return discard_event();
 }
@@ -132,8 +197,15 @@ sc::result basemob_base::react(const evmakedata &arg_evt)
 
 sc::result basemob_base::react(const evhit& arg_evt)
 {
-	context<basemob_machine>().onhit(arg_evt.m_dameage);
-	return discard_event();
+	context<basemob_machine>().onhit(arg_evt.m_dameage,arg_evt.dir);
+	return transit<basemob_nothing>();
+}
+
+sc::result basemob_base::react(const evcontact& arg_evt)
+{
+	evhit hit(10,context<basemob_machine>().get_dir());
+	arg_evt.m_obj->post_event(hit);
+	return transit<basemob_nothing>();
 }
 
 boost::random::mt19937 basemob_random::gen;

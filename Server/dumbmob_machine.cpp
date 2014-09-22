@@ -89,7 +89,7 @@ bool dumbmob_machine::checkdestory()
 	return false;
 }
 
-void dumbmob_machine::onhit(float arg_dameage)
+void dumbmob_machine::onhit(float arg_dameage,databody::movedirectiontype arg_dir)
 {
 	m_body->ApplyForceToCenter(b2Vec2(0, arg_dameage*2), true);
 	m_curhp -= arg_dameage;
@@ -113,6 +113,6 @@ sc::result dumbmob_common::react(const evmakedata &arg_evt)
 
 sc::result dumbmob_common::react(const evhit& arg_evt)
 {
-	context<dumbmob_machine>().onhit(arg_evt.m_dameage);
+	context<dumbmob_machine>().onhit(arg_evt.m_dameage,arg_evt.dir);
 	return discard_event();
 }

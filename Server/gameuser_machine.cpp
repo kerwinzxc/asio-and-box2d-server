@@ -48,13 +48,14 @@ gameuser_machine::gameuser_machine(weakptr_room arg_room, ptr_b2world arg_world,
 
 	fd1.userData = (void*)tagbody.getvalue();
 	fd1.density = 1.0f;
+	fd1.friction = 1.0f;
 	m_body->CreateFixture(&fd1);
 	
 //
 
 // circle sensor 일정 원안에 들어갈경우 개체의 정보를 보낸다.
 	b2CircleShape circleshape;
-	circleshape.m_radius = 100.0f;
+	circleshape.m_radius = 30.0f;
 	circleshape.m_p.Set(0.0f, 0.0f);
 
 	b2FixtureDef fd;
@@ -347,7 +348,7 @@ sc::result gameuser_skill1::react(const evtick &arg_evt)
 					hit = true;
 					auto _room = context<gameuser_machine>().m_room.lock();
 					auto _gameobject = _room->get_gameobject((unsigned int)a.m_body->GetUserData());
-					evhit evt(10);
+					evhit evt(10, context<gameuser_machine>().m_directiontype);
 					if (_gameobject != NULL)
 					{
 						_gameobject->process_event(evt);
@@ -450,6 +451,7 @@ gameuser_condition::~gameuser_condition()
 
 sc::result gameuser_condition::react(const evtick &arg_evt)
 {
+	m_hitcooldown -= arg_evt.m_tick;
 	//context<gameuser_machine>().m_curplayerhp -= arg_evt.m_tick;
 
 	if (context<gameuser_machine>().m_curplayerhp <= 0)
@@ -462,7 +464,22 @@ sc::result gameuser_condition::react(const evtick &arg_evt)
 
 sc::result gameuser_condition::react(const evhit &arg_evt)
 {
-	context<gameuser_machine>().m_curplayerhp -= arg_evt.m_dameage;
+	if (m_hitcooldown < 0.0f)
+	{
+		m_hitcooldown = 0.5f;
+		if (arg_evt.dir == databody::_left)
+		{
+			context<gameuser_machine>().m_body->ApplyForceToCenter(b2Vec2(-30.0f, 10.0f * arg_evt.m_dameage),true);
+		}
+		else
+		{
+			context<gameuser_machine>().m_body->ApplyForceToCenter(b2Vec2(30.0f, 10.0f * arg_evt.m_dameage),true);
+		}
+
+		context<gameuser_machine>().m_curplayerhp -= arg_evt.m_dameage;
+		//return transit<gameuser_idle>();
+	}
+	
 	return forward_event();
 }
 
@@ -496,11 +513,11 @@ sc::result gameuser_common::react(const evmakepacketdata &arg_evt)
 		auto& _gameuser_machine = context<gameuser_machine>();
 		auto curitr = _gameuser_machine.m_infolist.begin();
 		while (curitr != _gameuser_machine.m_infolist.end())
-		{		
+		{
 			auto _sharedptr = curitr->first.lock();
 			if (_sharedptr != NULL)
 			{
-				_sharedptr->makepacket_info(arg_evt.m_tcppacket,false);
+				_sharedptr->makepacket_info(arg_evt.m_tcppacket, false);
 				curitr++;
 			}
 			else
@@ -535,6 +552,19 @@ sc::result gameuser_common::react(const evmakepacketdata &arg_evt)
 			}
 		}
 		arg_evt.m_udppacket->addmessage(_gameuser_machine.get_gameuser_data());
+	}
+	{
+		auto& _gameuser_machine = context<gameuser_machine>();
+		auto curitr = _gameuser_machine.m_deletelist.begin();
+		while (curitr != _gameuser_machine.m_deletelist.end())
+		{
+			databody::leave_object obj;
+			obj.set_gameobject_index(curitr->second);
+			arg_evt.m_tcppacket->addmessage(&obj);
+			curitr++;
+		}
+
+		_gameuser_machine.m_deletelist.clear();
 	}
 	return discard_event();
 }
